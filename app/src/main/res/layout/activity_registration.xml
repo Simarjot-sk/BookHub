@@ -17,21 +17,34 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             android:src="@drawable/background_with_logo"
-            app:layout_constraintHeight_percent=".382"
+            app:layout_constraintHeight_percent=".3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/back_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            />
+
         <EditText
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_edit_text"
             android:drawableStart="@drawable/name"
             android:drawablePadding="14dp"
             android:hint="Name"
             android:inputType="textPersonName"
-            android:padding="15dp"
+            android:padding="12dp"
             android:paddingStart="17dp"
             android:textColorHint="#000"
             app:layout_constraintBottom_toTopOf="@+id/email"
@@ -41,9 +54,9 @@
             app:layout_constraintWidth_percent=".7" />
 
         <ImageButton
-            android:id="@+id/button"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:id="@+id/button2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/next"
             android:onClick="onClickNext"
@@ -63,7 +76,7 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:padding="15dp"
+            android:padding="12dp"
             android:textColorHint="#000"
             app:layout_constraintBottom_toTopOf="@+id/password"
             app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +95,7 @@
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword"
-            android:padding="15dp"
+            android:padding="12dp"
             android:paddingStart="18dp"
             android:textColorHint="#000"
             app:layout_constraintBottom_toTopOf="@+id/confirm_password"
@@ -102,28 +115,40 @@
             android:ems="10"
             android:hint="Confirm Password"
             android:inputType="textPassword"
-            android:padding="15dp"
+            android:padding="12dp"
             android:paddingStart="18dp"
             android:textColorHint="#000"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password"
             app:layout_constraintWidth_percent=".7" />
 
-        <ImageView
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:adjustViewBounds="true"
-            android:onClick="onClickProfileImage"
-            android:scaleType="fitCenter"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/profile_img2"
+            app:civ_border_color="#008000"
+            app:civ_border_width="4dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.51"
-            app:srcCompat="@drawable/profile_img2" />
+            app:layout_constraintVertical_bias="0.51" />
 
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/plus_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/plus"
+            app:civ_border_color="#008000"
+            app:civ_border_width="1dp"
+            app:civ_shadow="false"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

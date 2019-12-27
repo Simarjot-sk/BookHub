@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BookWala</string>
-    <string name="enter_email_message">Please Enter Your Email id</string>
-    <string name="enter_email_hint">Enter Your Email</string>
+    <string name="enter_email_message">Please Enter Your Email id or Mobile number</string>
+    <string name="enter_email_hint">Enter Email or Mobile number</string>
     <string name="forgot_password_message">Forgot Your Password?</string>
+    <string name="mobile_ver_msg">Mobile Number Verification</string>
 </resources>
