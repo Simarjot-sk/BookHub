@@ -18,6 +18,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
+
+import java.util.Optional;
 
 public class EmailSigninActivity extends AppCompatActivity {
     private static final String TAG = "nerd";
@@ -30,12 +34,15 @@ public class EmailSigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_signin);
 
-        email = getIntent().getStringExtra(MainActivity.EMAIL_EXTRA);
-
         sharedpreferences = getSharedPreferences("email", Context.MODE_PRIVATE);
-        if (sharedpreferences.contains(SAVED_EMAIL)) {
-            email = sharedpreferences.getString(SAVED_EMAIL, "");
+
+        email = getIntent().getStringExtra(MainActivity.EMAIL_EXTRA);
+        if(email==null){
+            if (sharedpreferences.contains(SAVED_EMAIL)) {
+                email = sharedpreferences.getString(SAVED_EMAIL, "");
+            }
         }
+
     }
 
     @Override
@@ -45,7 +52,7 @@ public class EmailSigninActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(SAVED_EMAIL, email);
-        editor.commit();
+        editor.apply();
     }
 
     public void sendEmail(View view){
@@ -106,6 +113,17 @@ public class EmailSigninActivity extends AppCompatActivity {
                                 Log.d(TAG, "Successfully signed in with email link!");
                                 AuthResult result = task.getResult();
                                 Toast.makeText(EmailSigninActivity.this, "Successfully signed in with email link!", Toast.LENGTH_SHORT).show();
+                                if(result!=null){
+                                    FirebaseUser user = result.getUser();
+                                    Log.d(TAG, user.getUid());
+                                }else{
+                                    Log.d(TAG, "result is null");
+                                }
+
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.clear();
+                                editor.apply();
+                                Log.d(TAG, "shared preferences cleared");
                                 // You can access the new user via result.getUser()
                                 // Additional user info profile *not* available via:
                                 // result.getAdditionalUserInfo().getProfile() == null
