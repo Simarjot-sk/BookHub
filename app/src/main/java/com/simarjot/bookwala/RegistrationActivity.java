@@ -1,5 +1,6 @@
 package com.simarjot.bookwala;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -19,6 +20,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.simarjot.bookwala.helpers.EmailHelper;
 import com.yalantis.ucrop.UCrop;
@@ -48,6 +55,12 @@ public class RegistrationActivity extends AppCompatActivity {
         profileView = findViewById(R.id.profile_image);
         backView = findViewById(R.id.back_button);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            name.setText(user.getDisplayName());
+            profileView.setImageURI(user.getPhotoUrl());
+        }
+
 
         backView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +89,6 @@ public class RegistrationActivity extends AppCompatActivity {
         email.setText(getIntent().getStringExtra(MainActivity.EMAIL_EXTRA));
     }
 
-
     public void onClickNext(View view){
         String nameString = name.getText().toString();
         String emailString = email.getText().toString();
@@ -102,8 +114,38 @@ public class RegistrationActivity extends AppCompatActivity {
         }
         
         if(!hasErrors){
-            Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
+            updateUserDetails(nameString);
         }
+    }
+
+    private void updateUserDetails(String name){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null){
+            Toast.makeText(this, "User is not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .setPhotoUri(imageUri)
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegistrationActivity.this, "profile updated successfully", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "User profile updated.");
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                             Log.d(TAG, "failed to update profile", e);
+                        Toast.makeText(RegistrationActivity.this, "failed to update profile", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -211,7 +253,6 @@ public class RegistrationActivity extends AppCompatActivity {
             Log.d("nerd", "io exception", ex);
         }
 
-        String currentPhotoPath = "file:" + file.getAbsolutePath();
         return file;
     }
 

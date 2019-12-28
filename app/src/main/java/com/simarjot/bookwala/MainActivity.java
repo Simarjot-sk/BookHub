@@ -1,9 +1,12 @@
 package com.simarjot.bookwala;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +17,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.FirebaseAuth;
 import com.simarjot.bookwala.helpers.EmailHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
             otpIntent.putExtra(MOBILE_EXTRA, userIdentifier);
             startActivity(otpIntent);
         }else if(isEmail){
-            Intent emailSigninIntent = new Intent(MainActivity.this, EmailSigninActivity.class);
-            emailSigninIntent.putExtra( EMAIL_EXTRA, userIdentifier);
-            startActivity(emailSigninIntent);
+            sendEmail(userIdentifier);
         }
     }
 
@@ -105,5 +111,50 @@ public class MainActivity extends AppCompatActivity {
         errorMessage.setText(msg);
         nextButton.setClickable(true);
         nextButton.setEnabled(true);
+    }
+
+
+    private void sendEmail(final String email){
+        Log.d(TAG, "sending email...");
+        ActionCodeSettings actionCodeSettings =
+                ActionCodeSettings.newBuilder()
+                        .setUrl("https://bookwala.page.link/signIn")
+                        .setHandleCodeInApp(true)
+                        .setIOSBundleId("com.example.ios")
+                        .setAndroidPackageName(
+                                "com.simarjot.bookwala",
+                                true,
+                                "12")
+                        .build();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent to " + email);
+
+                            //saving the email in shared pref so that it is persisted even if the app is destroyed or stopped
+                            SharedPreferences preferences = getSharedPreferences("email", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString(EmailSigninActivity.SAVED_EMAIL, email);
+                            editor.apply();
+
+                            Toast.makeText(MainActivity.this, "Email sent to " + email, Toast.LENGTH_SHORT).show();
+
+                        }else if(task.isCanceled()){
+                            Log.d(TAG, "cancelled");
+                            Toast.makeText(MainActivity.this, "Failed to Send Email", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Failed to Send Email", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "email sending failed", e);
+                    }
+                });
     }
 }

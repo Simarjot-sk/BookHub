@@ -25,7 +25,7 @@ import java.util.Optional;
 
 public class EmailSigninActivity extends AppCompatActivity {
     private static final String TAG = "nerd";
-    private static final String SAVED_EMAIL="saved_email";
+    public static final String SAVED_EMAIL="saved_email";
     private String email;
     private SharedPreferences sharedpreferences;
 
@@ -35,67 +35,15 @@ public class EmailSigninActivity extends AppCompatActivity {
         setContentView(R.layout.activity_email_signin);
 
         sharedpreferences = getSharedPreferences("email", Context.MODE_PRIVATE);
-
-        email = getIntent().getStringExtra(MainActivity.EMAIL_EXTRA);
-        if(email==null){
-            if (sharedpreferences.contains(SAVED_EMAIL)) {
-                email = sharedpreferences.getString(SAVED_EMAIL, "");
-            }
+        if (sharedpreferences.contains(SAVED_EMAIL)) {
+            email = sharedpreferences.getString(SAVED_EMAIL, "");
+        }else{
+            Log.d(TAG, "shared prefereces does not contain email");
         }
-
+        verify();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "on stop");
-
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(SAVED_EMAIL, email);
-        editor.apply();
-    }
-
-    public void sendEmail(View view){
-        Log.d(TAG, "sending email...");
-        ActionCodeSettings actionCodeSettings =
-                ActionCodeSettings.newBuilder()
-                        // URL you want to redirect back to. The domain (www.example.com) for this
-                        // URL must be whitelisted in the Firebase Console.
-                        .setUrl("https://bookwala.page.link/signIn")
-                        // This must be true
-                        .setHandleCodeInApp(true)
-                        .setIOSBundleId("com.example.ios")
-                        .setAndroidPackageName(
-                                "com.simarjot.bookwala",
-                                true, /* installIfNotAvailable */
-                                "12" /* minimumVersion */)
-                        .build();
-
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.sendSignInLinkToEmail(email, actionCodeSettings)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent to " + email);
-                            Toast.makeText(EmailSigninActivity.this, "Email sent to " + email, Toast.LENGTH_SHORT).show();
-                        }else if(task.isCanceled()){
-                            Log.d(TAG, "cancelled");
-                            Toast.makeText(EmailSigninActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "email sending failed", e);
-                    }
-
-                });
-    }
-
-    public void verify(View view){
+    public void verify(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         String emailLink = intent.getData().toString();
@@ -112,26 +60,28 @@ public class EmailSigninActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "Successfully signed in with email link!");
                                 AuthResult result = task.getResult();
-                                Toast.makeText(EmailSigninActivity.this, "Successfully signed in with email link!", Toast.LENGTH_SHORT).show();
-                                if(result!=null){
-                                    FirebaseUser user = result.getUser();
-                                    Log.d(TAG, user.getUid());
-                                }else{
-                                    Log.d(TAG, "result is null");
-                                }
 
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.clear();
                                 editor.apply();
                                 Log.d(TAG, "shared preferences cleared");
-                                // You can access the new user via result.getUser()
-                                // Additional user info profile *not* available via:
-                                // result.getAdditionalUserInfo().getProfile() == null
-                                // You can check if the user is new or existing:
-                                // result.getAdditionalUserInfo().isNewUser()
+
+                                if(result!=null){
+                                    boolean isNewUser = result.getAdditionalUserInfo().isNewUser();
+                                    if(isNewUser){
+                                        Intent registrationIntent = new Intent(EmailSigninActivity.this, RegistrationActivity.class);
+                                        registrationIntent.putExtra(MainActivity.EMAIL_EXTRA, email);
+                                        startActivity(registrationIntent);
+                                    }else{
+                                        Intent welcomeIntent = new Intent(EmailSigninActivity.this, Login.class);
+                                        startActivity(welcomeIntent);
+                                        Toast.makeText(EmailSigninActivity.this, "Welcome Back!", Toast.LENGTH_LONG).show();
+                                    }
+                                }
                             } else {
                                 Log.e(TAG, "Error signing in with email link", task.getException());
                                 Toast.makeText(EmailSigninActivity.this, "Error signing in with email link", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         }
                     });
