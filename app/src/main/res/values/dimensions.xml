@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="buttonLine">.85</dimen>
+    <dimen name="formLine">.62</dimen>
+    <dimen name="messageLine">.47</dimen>
+</resources>

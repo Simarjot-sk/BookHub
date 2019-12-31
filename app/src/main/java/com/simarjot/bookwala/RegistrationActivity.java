@@ -38,8 +38,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final String TAG = "nerd";
     private EditText name;
     private EditText email;
-    private EditText password;
-    private EditText confirmPassword;
     private CircularImageView profileView;
     private ImageView backView;
     private Uri imageUri;
@@ -50,9 +48,7 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-        confirmPassword = findViewById(R.id.confirm_password);
-        profileView = findViewById(R.id.profile_image);
+       profileView = findViewById(R.id.profile_image);
         backView = findViewById(R.id.back_button);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -86,33 +82,21 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
-        email.setText(getIntent().getStringExtra(MainActivity.EMAIL_EXTRA));
     }
 
     public void onClickNext(View view){
         String nameString = name.getText().toString();
         String emailString = email.getText().toString();
-        String passwordString = password.getText().toString();
-        String confirmString = confirmPassword.getText().toString();
-        
+
         boolean hasErrors=false;
         if(!EmailHelper.isValidEmail(emailString)){
             email.setError("Enter a valid Email Address");  
             hasErrors = true;
         }
-        if(nameString.length()<2){
+        if(nameString.length()<2) {
             name.setError("Name should have atleast 2 characters");
             hasErrors = true;
         }
-        if(passwordString.length()<8){
-            password.setError("Password should contain atleast 8 digits");
-            hasErrors = true;
-        }
-        if(!passwordString.equals(confirmString)){
-            confirmPassword.setError("Passwords do not match");
-            hasErrors = true;
-        }
-        
         if(!hasErrors){
             updateUserDetails(nameString);
         }

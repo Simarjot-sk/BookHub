@@ -52,11 +52,10 @@ public class OtpActivity extends AppCompatActivity {
             @Override
             public void onOTPComplete(String otp) {
                 OtpActivity.this.otp = otp;
-                Toast.makeText(OtpActivity.this, "The OTP is " + otp,  Toast.LENGTH_SHORT).show();
             }
         });
 
-        mobileNo = "+91" + getIntent().getStringExtra(MainActivity.MOBILE_EXTRA);
+        mobileNo = getIntent().getStringExtra(MainActivity.MOBILE_EXTRA);
 
         startFirebaseLogin();
 
@@ -91,6 +90,8 @@ public class OtpActivity extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 Toast.makeText(OtpActivity.this,"verification completed",Toast.LENGTH_SHORT).show();
+                Intent homeIntent = new Intent(OtpActivity.this, HomeActivity.class);
+                startActivity(homeIntent);
             }
 
             @Override
@@ -102,7 +103,7 @@ public class OtpActivity extends AppCompatActivity {
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 verificationCode = s;
-                tvMobileNo.setText("OTP has been sent to you on " + mobileNo);
+                tvMobileNo.setText("OTP has been sent to you on " + getIntent().getStringExtra(MainActivity.MOBILE_EXTRA_FORMATTED));
                 Toast.makeText(OtpActivity.this,"Code sent",Toast.LENGTH_SHORT).show();
             }
         };
@@ -121,8 +122,8 @@ public class OtpActivity extends AppCompatActivity {
                                 registrationIntent.putExtra(MainActivity.MOBILE_EXTRA, mobileNo);
                                 startActivity(registrationIntent);
                             }else{
-                                Intent welcomeIntent = new Intent(OtpActivity.this, Login.class);
-                                startActivity(welcomeIntent);
+                                Intent homeIntent = new Intent(OtpActivity.this, HomeActivity.class);
+                                startActivity(homeIntent);
                             }
                         } else {
                             Toast.makeText(OtpActivity.this,"Incorrect OTP",Toast.LENGTH_SHORT).show();
