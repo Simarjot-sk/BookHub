@@ -1,35 +1,22 @@
 package com.simarjot.bookwala;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
-import com.simarjot.bookwala.helpers.EmailHelper;
 
 public class MainActivity extends AppCompatActivity {
     public static String MOBILE_EXTRA = "mobile_extra";
     public static String MOBILE_EXTRA_FORMATTED = "mobile_formatted";
-    private static String TAG = "nerd";
+    public static String TAG = "nerd";
 
     private CountryCodePicker ccp;
     private EditText mobileEditText;

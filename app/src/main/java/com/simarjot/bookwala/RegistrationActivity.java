@@ -3,17 +3,13 @@ package com.simarjot.bookwala;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,11 +23,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.simarjot.bookwala.helpers.EmailHelper;
+import com.simarjot.bookwala.helpers.Helper;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.IOException;
 
 public class RegistrationActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 123;
@@ -48,7 +43,7 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
-       profileView = findViewById(R.id.profile_image);
+        profileView = findViewById(R.id.profile_image);
         backView = findViewById(R.id.back_button);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -68,8 +63,9 @@ public class RegistrationActivity extends AppCompatActivity {
         profileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isReadStoragePermissionGranted()&&isWriteStoragePermissionGranted()){
-                    pickImage();
+                if(Helper.isReadStoragePermissionGranted(RegistrationActivity.this) &&
+                        Helper.isReadStoragePermissionGranted(RegistrationActivity.this)){
+                    Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
                 }
             }
         });
@@ -77,8 +73,9 @@ public class RegistrationActivity extends AppCompatActivity {
         plusIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isReadStoragePermissionGranted()&&isWriteStoragePermissionGranted()){
-                    pickImage();
+                if(Helper.isReadStoragePermissionGranted(RegistrationActivity.this) &&
+                        Helper.isReadStoragePermissionGranted(RegistrationActivity.this)){
+                    Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
                 }
             }
         });
@@ -89,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
         String emailString = email.getText().toString();
 
         boolean hasErrors=false;
-        if(!EmailHelper.isValidEmail(emailString)){
+        if(!Helper.isValidEmail(emailString)){
             email.setError("Enter a valid Email Address");  
             hasErrors = true;
         }
@@ -141,7 +138,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
                     Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
                     //resume tasks needing this permission
-                    pickImage();
+                    Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
                 }else{
                     Toast.makeText(this, "permission not granted", Toast.LENGTH_SHORT).show();
                 }
@@ -152,7 +149,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
                     Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
                     //resume tasks needing this permission
-                    pickImage();
+                    Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
                 }else{
                     Toast.makeText(this, "permission not granted", Toast.LENGTH_SHORT).show();
                 }
@@ -160,16 +157,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    private void pickImage(){
-        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent,GALLERY_REQUEST_CODE);
-    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -178,7 +166,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 case GALLERY_REQUEST_CODE:
                     Uri selectedImage = data.getData();
                     Log.d("nerd","user selected this image" + selectedImage.toString());
-                    File file = getImageFile(); // 2
+                    File file = Helper.getImageFile(); // 2
                     Uri destinationUri = Uri.fromFile(file);
 
                     UCrop.Options options = new UCrop.Options();
@@ -218,64 +206,6 @@ public class RegistrationActivity extends AppCompatActivity {
         if(resultCode==96){
             final Throwable cropError = UCrop.getError(data);
             Log.d("nerd", "UCrop error occured\n", cropError);
-        }
-    }
-
-    private File getImageFile() {
-        String imageFileName = "JPEG_" + System.currentTimeMillis() + "_";
-        File storageDir = new File(
-                Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DCIM
-                ), "Camera"
-        );
-        File file = null;
-        try {
-             file = File.createTempFile(
-                    imageFileName, ".jpg", storageDir
-            );
-        }catch (IOException ex){
-            Log.d("nerd", "io exception", ex);
-        }
-
-        return file;
-    }
-
-
-    public  boolean isReadStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted1");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked1");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted1");
-            return true;
-        }
-    }
-
-    public  boolean isWriteStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted2");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked2");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted2");
-            return true;
         }
     }
 }
