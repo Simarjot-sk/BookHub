@@ -67,20 +67,6 @@ public class Helper {
         }
     }
 
-    public static boolean isCameraPermissionGranted(Activity activity){
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            } else {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            return true;
-        }
-    }
 
     public static File getImageFile() {
         String imageFileName = "JPEG_" + System.currentTimeMillis() + "_";

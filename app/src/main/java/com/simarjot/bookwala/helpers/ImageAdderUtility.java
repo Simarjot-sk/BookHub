@@ -5,15 +5,18 @@ import android.util.Log;
 import android.widget.ImageView;
 import com.simarjot.bookwala.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdderUtility {
     private static final String TAG = "imageAdder";
     private List<ImageView> bookViews;
+    private List<Uri> bookImageUris;
     private int currentIndex = -1;
 
     public ImageAdderUtility(List<ImageView> imageViews) {
         bookViews = imageViews;
+        bookImageUris = new ArrayList<Uri>();
     }
 
     public void addImage(Uri imageUri){
@@ -21,13 +24,26 @@ public class ImageAdderUtility {
         updatePlus();
         bookViews.get(currentIndex).setImageURI(imageUri);
         bookViews.get(currentIndex).setScaleType(ImageView.ScaleType.CENTER_CROP);
+        bookImageUris.add(imageUri);
         log();
     }
 
     private void updatePlus(){
         if(currentIndex < (bookViews.size() - 1)){
-            bookViews.get(currentIndex+1).setImageResource(R.drawable.chnage_img);
-            bookViews.get(currentIndex+1).setScaleType(ImageView.ScaleType.CENTER);
+            int plusIndex = currentIndex+1;
+            bookViews.get(plusIndex).setImageResource(R.drawable.chnage_img);
+            bookViews.get(plusIndex).setScaleType(ImageView.ScaleType.CENTER);
+
+            //setting all the images unclickable
+            for(ImageView iv: bookViews){
+                iv.setClickable(false);
+            }
+            //setting just the image with plus clickable
+            bookViews.get(plusIndex).setClickable(true);
+        }else {
+            for(ImageView iv: bookViews){
+                iv.setClickable(false);
+            }
         }
     }
 
@@ -39,5 +55,12 @@ public class ImageAdderUtility {
         }else {
             Log.d(TAG, (currentIndex + 1) + " images added");
         }
+    }
+
+    public int getCurrentIndex(){
+        return currentIndex;
+    }
+    public List<Uri> getBookImageUris(){
+        return bookImageUris;
     }
 }
