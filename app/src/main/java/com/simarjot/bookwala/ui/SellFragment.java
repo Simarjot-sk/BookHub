@@ -57,20 +57,58 @@ public class SellFragment extends Fragment {
     private static final int CAMERA_PERMISSION_CODE=121;
     private static final int GALLERY_REQUEST_CODE=420;
     private static final int CAMERA_REQUEST_CODE=421;
-    private Button uploadButton;
     private ImageAdderUtility imageUtil;
+
+    //widgets
+    private Button uploadButton;
+    private ImageView minus1;
+    private ImageView minus2;
+    private ImageView minus3;
+    private ImageView minus4;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sell, null);
         uploadButton = view.findViewById(R.id.image_upload_button);
+
+        minus1 = view.findViewById(R.id.minus_1);
+        minus2 = view.findViewById(R.id.minus_2);
+        minus3 = view.findViewById(R.id.minus_3);
+        minus4 = view.findViewById(R.id.minus_4);
+        minus1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        minus2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        minus3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        minus4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
+            }
+        });
         ImageView bookView1 = view.findViewById(R.id.book_image_1);
         ImageView bookView2 = view.findViewById(R.id.book_image_2);
         ImageView bookView3 = view.findViewById(R.id.book_image_3);
         ImageView bookView4 = view.findViewById(R.id.book_image_4);
 
-        imageUtil = new ImageAdderUtility(Arrays.asList(bookView1, bookView2, bookView3, bookView4));
+        imageUtil = new ImageAdderUtility(Arrays.asList(bookView1, bookView2, bookView3, bookView4), Arrays.asList(minus1, minus2, minus3, minus4));
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,6 +230,11 @@ public class SellFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(getContext(), "Image upload Failed", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getActivity(), "image uploaded successfully", Toast.LENGTH_SHORT).show();
                 }
             });
         }

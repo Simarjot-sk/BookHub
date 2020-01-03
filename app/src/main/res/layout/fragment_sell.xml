@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/upload_photo_background"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".4"/>
+        app:layout_constraintGuide_percent=".4" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline11"
@@ -87,6 +87,50 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/book_image_3"
         app:layout_constraintTop_toTopOf="@+id/guideline10"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/flag_transparent" />
 
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/minus_1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/minus"
+        app:civ_border="false"
+        app:layout_constraintBottom_toTopOf="@+id/book_image_1"
+        app:layout_constraintEnd_toEndOf="@+id/book_image_1"
+        app:layout_constraintStart_toEndOf="@+id/book_image_1"
+        app:layout_constraintTop_toTopOf="@+id/book_image_1" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/minus_2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/minus"
+        app:civ_border="false"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="@+id/book_image_2"
+        app:layout_constraintStart_toEndOf="@+id/book_image_2"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/minus_3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/minus"
+        app:civ_border="false"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="@+id/book_image_3"
+        app:layout_constraintStart_toEndOf="@+id/book_image_3"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/minus_4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/minus"
+        app:civ_border="false"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="@+id/book_image_4"
+        app:layout_constraintStart_toEndOf="@+id/book_image_4"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
 </androidx.constraintlayout.widget.ConstraintLayout>

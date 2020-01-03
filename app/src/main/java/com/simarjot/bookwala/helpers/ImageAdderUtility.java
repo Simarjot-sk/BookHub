@@ -2,7 +2,10 @@ package com.simarjot.bookwala.helpers;
 
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.simarjot.bookwala.R;
 
 import java.util.ArrayList;
@@ -13,9 +16,16 @@ public class ImageAdderUtility {
     private List<ImageView> bookViews;
     private List<Uri> bookImageUris;
     private int currentIndex = -1;
+    private List<ImageView> minusViews;
 
-    public ImageAdderUtility(List<ImageView> imageViews) {
+    public ImageAdderUtility(List<ImageView> imageViews, List<ImageView> minus) {
         bookViews = imageViews;
+        minusViews = minus;
+        for(ImageView iv: minusViews){
+            iv.setVisibility(View.GONE);
+            iv.setClickable(false);
+        }
+
         bookImageUris = new ArrayList<Uri>();
     }
 
@@ -25,6 +35,9 @@ public class ImageAdderUtility {
         bookViews.get(currentIndex).setImageURI(imageUri);
         bookViews.get(currentIndex).setScaleType(ImageView.ScaleType.CENTER_CROP);
         bookImageUris.add(imageUri);
+
+        minusViews.get(currentIndex).setVisibility(View.VISIBLE);
+        minusViews.get(currentIndex).setClickable(true);
         log();
     }
 
@@ -46,6 +59,7 @@ public class ImageAdderUtility {
             }
         }
     }
+
 
     private void log(){
         if(currentIndex==-1){
