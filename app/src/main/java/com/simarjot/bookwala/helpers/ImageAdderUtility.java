@@ -1,11 +1,19 @@
 package com.simarjot.bookwala.helpers;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Shader;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.flexbox.AlignSelf;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.R;
 
 import java.util.ArrayList;
@@ -13,52 +21,57 @@ import java.util.List;
 
 public class ImageAdderUtility {
     private static final String TAG = "imageAdder";
-    private List<ImageView> bookViews;
-    private List<Uri> bookImageUris;
-    private int currentIndex = -1;
-    private List<ImageView> minusViews;
+    private int currentIndex = 0;
+    private Context context;
 
-    public ImageAdderUtility(List<ImageView> imageViews, List<ImageView> minus) {
-        bookViews = imageViews;
-        minusViews = minus;
-        for(ImageView iv: minusViews){
-            iv.setVisibility(View.GONE);
-            iv.setClickable(false);
-        }
+    //Widgets
+    private FlexboxLayout layout;
 
-        bookImageUris = new ArrayList<Uri>();
+    public ImageAdderUtility(Context context, View view) {
+        layout = view.findViewById(R.id.flex_box_layout);
+        this.context = context;
     }
 
     public void addImage(Uri imageUri){
-        currentIndex++;
-        updatePlus();
-        bookViews.get(currentIndex).setImageURI(imageUri);
-        bookViews.get(currentIndex).setScaleType(ImageView.ScaleType.CENTER_CROP);
-        bookImageUris.add(imageUri);
 
-        minusViews.get(currentIndex).setVisibility(View.VISIBLE);
-        minusViews.get(currentIndex).setClickable(true);
+        RoundedImageView newImage = new RoundedImageView(context);
+        newImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        newImage.setCornerRadius((float) 10);
+        newImage.setBorderWidth((float) 2);
+        newImage.setBorderColor(Color.DKGRAY);
+        newImage.mutateBackground(true);
+        newImage.setImageURI(imageUri);
+        newImage.setOval(false);
+
+        layout.addView(newImage, currentIndex);
+
+        FlexboxLayout.LayoutParams newImageParams = new FlexboxLayout.LayoutParams(180, 180);
+        newImageParams.setMargins(0,0,10,10);
+
+        newImage.setLayoutParams(newImageParams);
         log();
+        currentIndex++;
+
     }
 
-    private void updatePlus(){
-        if(currentIndex < (bookViews.size() - 1)){
-            int plusIndex = currentIndex+1;
-            bookViews.get(plusIndex).setImageResource(R.drawable.chnage_img);
-            bookViews.get(plusIndex).setScaleType(ImageView.ScaleType.CENTER);
-
-            //setting all the images unclickable
-            for(ImageView iv: bookViews){
-                iv.setClickable(false);
-            }
-            //setting just the image with plus clickable
-            bookViews.get(plusIndex).setClickable(true);
-        }else {
-            for(ImageView iv: bookViews){
-                iv.setClickable(false);
-            }
-        }
-    }
+//    private void updatePlus(){
+//        if(currentIndex < (bookViews.size() - 1)){
+//            int plusIndex = currentIndex+1;
+//            bookViews.get(plusIndex).setImageResource(R.drawable.chnage_img);
+//            bookViews.get(plusIndex).setScaleType(ImageView.ScaleType.CENTER);
+//
+//            //setting all the images unclickable
+//            for(ImageView iv: bookViews){
+//                iv.setClickable(false);
+//            }
+//            //setting just the image with plus clickable
+//            bookViews.get(plusIndex).setClickable(true);
+//        }else {
+//            for(ImageView iv: bookViews){
+//                iv.setClickable(false);
+//            }
+//        }
+//    }
 
 
     private void log(){
@@ -74,7 +87,7 @@ public class ImageAdderUtility {
     public int getCurrentIndex(){
         return currentIndex;
     }
-    public List<Uri> getBookImageUris(){
-        return bookImageUris;
-    }
+//    public List<Uri> getBookImageUris(){
+//        return bookImageUris;
+//    }
 }

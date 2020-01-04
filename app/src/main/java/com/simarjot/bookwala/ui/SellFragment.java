@@ -6,20 +6,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,10 +40,8 @@ import com.simarjot.bookwala.helpers.Helper;
 import com.simarjot.bookwala.helpers.ImageAdderUtility;
 import com.yalantis.ucrop.UCrop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -60,87 +54,21 @@ public class SellFragment extends Fragment {
     private ImageAdderUtility imageUtil;
 
     //widgets
-    private Button uploadButton;
-    private ImageView minus1;
-    private ImageView minus2;
-    private ImageView minus3;
-    private ImageView minus4;
+    private Button doneButton;
+    private ImageButton addBtn;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sell_new, null);
-        uploadButton = view.findViewById(R.id.image_upload_button);
+        imageUtil = new ImageAdderUtility(getContext(), view);
+        doneButton = view.findViewById(R.id.image_upload_button);
+        addBtn = view.findViewById(R.id.add_images_btn);
 
-        minus1 = view.findViewById(R.id.minus_1);
-        minus2 = view.findViewById(R.id.minus_2);
-        minus3 = view.findViewById(R.id.minus_3);
-        minus4 = view.findViewById(R.id.minus_4);
-        minus1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
-            }
+        addBtn.setOnClickListener( v ->{
+            getImageFromCameraOrGallery();
         });
-
-        minus2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        minus3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        minus4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Remove Image", Toast.LENGTH_SHORT).show();
-            }
-        });
-        ImageView bookView1 = view.findViewById(R.id.book_image_1);
-        ImageView bookView2 = view.findViewById(R.id.book_image_2);
-        ImageView bookView3 = view.findViewById(R.id.book_image_3);
-        ImageView bookView4 = view.findViewById(R.id.book_image_4);
-
-        imageUtil = new ImageAdderUtility(Arrays.asList(bookView1, bookView2, bookView3, bookView4), Arrays.asList(minus1, minus2, minus3, minus4));
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImageToFirebase();
-            }
-        });
-
-        bookView1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getImageFromCameraOrGallery();
-            }
-        });
-        bookView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getImageFromCameraOrGallery();
-            }
-        });
-        bookView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getImageFromCameraOrGallery();
-            }
-        });
-        bookView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getImageFromCameraOrGallery();
-            }
-        });
-
         return view;
     }
 
@@ -189,7 +117,6 @@ public class SellFragment extends Fragment {
                 case UCrop.REQUEST_CROP:
                     Uri croppedImageUri = UCrop.getOutput(data);
                     imageUtil.addImage(croppedImageUri);
-                   // uploadImageToFirebase();
                     break;
                 case CAMERA_REQUEST_CODE:
                     if(currentPhotoPath==null){
@@ -204,63 +131,27 @@ public class SellFragment extends Fragment {
         }
     }
 
-    private void uploadImageToFirebase(){
-        
-        if(imageUtil.getCurrentIndex()<3) return;
-
-        String postId = UUID.randomUUID().toString();
-
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference booksRef = storageRef.child("images/books/" + postId);
-
-        int i=0;
-        List<Uri> bookImageUris = imageUtil.getBookImageUris();
-        for(Uri uri:bookImageUris){
-            StorageReference imageBunch = booksRef.child(postId + "__" + (++i) +".jpg");
-            StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setCustomMetadata("createdAt", new Date().toString()).build();
-            imageBunch.updateMetadata(metadata);
-            imageBunch.putFile(uri).addOnCanceledListener(new OnCanceledListener() {
-                @Override
-                public void onCanceled() {
-                    Toast.makeText(getContext(), "Image upload Cancelled", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), "Image upload Failed", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getActivity(), "image uploaded successfully", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
     private void startCropper(Uri selectedImage){
-        File file = Helper.getImageFile();
-        Uri destinationUri = Uri.fromFile(file);
+            File file = Helper.getImageFile();
+            Uri destinationUri = Uri.fromFile(file);
 
-        UCrop.Options options = new UCrop.Options();
-        options.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        options.setToolbarColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        options.setFreeStyleCropEnabled(true);
-        options.setToolbarWidgetColor(ContextCompat.getColor(getActivity(), R.color.white));
-        options.setRootViewBackgroundColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
-        options.setCropFrameColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
-        options.setActiveWidgetColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        options.setRootViewBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black));
-        options.setMaxBitmapSize(10000);
-        options.setCompressionQuality(100);
+            UCrop.Options options = new UCrop.Options();
+            options.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            options.setToolbarColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            options.setFreeStyleCropEnabled(true);
+            options.setToolbarWidgetColor(ContextCompat.getColor(getActivity(), R.color.white));
+            options.setRootViewBackgroundColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
+            options.setCropFrameColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
+            options.setActiveWidgetColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            options.setRootViewBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black));
+            options.setMaxBitmapSize(10000);
+            options.setCompressionQuality(100);
 
-        UCrop.of(selectedImage,destinationUri)
-                .withMaxResultSize(1000, 1000)
-                .withOptions(options)
-                .start(getActivity().getApplicationContext(), getFragmentManager().findFragmentById(R.id.fragment_container));
-    }
+            UCrop.of(selectedImage, destinationUri)
+                    .withMaxResultSize(1000, 1000)
+                    .withOptions(options)
+                    .start(getActivity().getApplicationContext(), getFragmentManager().findFragmentById(R.id.fragment_container));
+        }
 
     private String currentPhotoPath;
     private File theFile;
@@ -280,8 +171,47 @@ public class SellFragment extends Fragment {
         }catch (IOException ex){
             Log.d("nerd", "io exception", ex);
         }
-    currentPhotoPath = file.getAbsolutePath();
+        currentPhotoPath = file.getAbsolutePath();
         theFile = file;
         return file;
     }
+
+
+
+//    private void uploadImageToFirebase(){
+//
+//        if(imageUtil.getCurrentIndex()<3) return;
+//
+//        String postId = UUID.randomUUID().toString();
+//
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference booksRef = storageRef.child("images/books/" + postId);
+//
+//        int i=0;
+//      //  List<Uri> bookImageUris = imageUtil.getBookImageUris();
+//        //for(Uri uri:bookImageUris){
+//            StorageReference imageBunch = booksRef.child(postId + "__" + (++i) +".jpg");
+//            StorageMetadata metadata = new StorageMetadata.Builder()
+//                    .setCustomMetadata("createdAt", new Date().toString()).build();
+//            imageBunch.updateMetadata(metadata);
+//            imageBunch.putFile(uri).addOnCanceledListener(new OnCanceledListener() {
+//                @Override
+//                public void onCanceled() {
+//                    Toast.makeText(getContext(), "Image upload Cancelled", Toast.LENGTH_SHORT).show();
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(getContext(), "Image upload Failed", Toast.LENGTH_SHORT).show();
+//                }
+//            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    Toast.makeText(getActivity(), "image uploaded successfully", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//    }
+
 }
