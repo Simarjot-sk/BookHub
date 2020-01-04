@@ -69,7 +69,7 @@ public class SellFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sell, null);
+        View view = inflater.inflate(R.layout.fragment_sell_new, null);
         uploadButton = view.findViewById(R.id.image_upload_button);
 
         minus1 = view.findViewById(R.id.minus_1);

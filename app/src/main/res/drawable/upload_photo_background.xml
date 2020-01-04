@@ -10,9 +10,7 @@
     </item>
 
     <item>
-            <bitmap
-                android:gravity="center"
-                android:src="@drawable/dslr_camera"/>
-    </item>
 
+        <bitmap android:src="@drawable/dslr_camera" android:gravity="center" />
+    </item>
 </layer-list>
