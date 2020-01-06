@@ -1,34 +1,38 @@
 package com.simarjot.bookwala;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.simarjot.bookwala.ui.ChatFragment;
 import com.simarjot.bookwala.ui.DiscoverFragment;
 import com.simarjot.bookwala.ui.SearchFragment;
 import com.simarjot.bookwala.ui.SellFragment;
 import com.simarjot.bookwala.ui.SettingsFragment;
-import com.yalantis.ucrop.UCrop;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    private DiscoverFragment discoverFragment;
+    private SellFragment sellFragment;
+    private SettingsFragment settingsFragment;
+    private ChatFragment chatFragment;
+    private SearchFragment searchFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        loadFragment(new SellFragment());
+
+        discoverFragment = new DiscoverFragment();
+        sellFragment = new SellFragment();
+        searchFragment = new SearchFragment();
+        settingsFragment = new SettingsFragment();
+        chatFragment = new ChatFragment();
+
+        loadFragment(sellFragment);
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
     }
@@ -40,19 +44,19 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (menuItem.getItemId()){
             case R.id.discover:
-                fragment = new DiscoverFragment();
+                fragment = discoverFragment;
                 break;
             case R.id.search:
-                fragment = new SearchFragment();
+                fragment = searchFragment;
                 break;
             case R.id.settings:
-                fragment = new SettingsFragment();
+                fragment = settingsFragment;
                 break;
             case R.id.chat:
-                fragment = new ChatFragment();
+                fragment = chatFragment;
                 break;
             case R.id.sell:
-                fragment = new SellFragment();
+                fragment = sellFragment;
                 break;
         }
         return loadFragment(fragment);

@@ -34,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.simarjot.bookwala.CoverImageSelectorActivity;
 import com.simarjot.bookwala.MainActivity;
 import com.simarjot.bookwala.R;
 import com.simarjot.bookwala.helpers.Helper;
@@ -42,6 +43,7 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -63,12 +65,21 @@ public class SellFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sell_new, null);
         imageUtil = new ImageAdderUtility(getContext(), view);
-        doneButton = view.findViewById(R.id.image_upload_button);
+        doneButton = view.findViewById(R.id.done_btn);
         addBtn = view.findViewById(R.id.add_images_btn);
 
-        addBtn.setOnClickListener( v ->{
-            getImageFromCameraOrGallery();
+        doneButton.setOnClickListener( v -> {
+            ArrayList<String> imageUris = (ArrayList<String>) imageUtil.getImageUris();
+            if(imageUris.size()<1){
+                Toast.makeText(getContext(), "Please Add Images of the book", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(getContext(), CoverImageSelectorActivity.class);
+            intent.putStringArrayListExtra("imageUris", imageUris);
+            getActivity().startActivity(intent);
+
         });
+        addBtn.setOnClickListener( v -> getImageFromCameraOrGallery() );
         return view;
     }
 
@@ -126,8 +137,11 @@ public class SellFragment extends Fragment {
                     break;
             }
         }else{
-            Throwable th = UCrop.getError(data);
-            Log.d(MainActivity.TAG, "error occured while statiring activity for result " + requestCode, th);
+            if(data!=null){
+                Throwable th = UCrop.getError(data);
+                Log.d(MainActivity.TAG, "error occured while statiring activity for result " + requestCode, th);
+            }
+            Log.d("nerd", "result code not ok");
         }
     }
 
