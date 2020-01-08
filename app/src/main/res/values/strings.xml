@@ -10,4 +10,29 @@
     <string name="title_notifications">Notifications</string>
     <string name="done">Done</string>
     <string name="select_cover_image">Select Front Cover Image of Book</string>
+    <string name="categories_msg">Select Category</string>
+    <string name="college">College</string>
+    <string name="school">School</string>
+    <string name="competitive">Competitive Exams</string>
+    <string name="others">Others</string>
+
+    <string name="title_msg">Book title</string>
+    <string name="desc_msg">Add Description</string>
+    <string name="subject_msg">Subject</string>
+    <string name="class_msg">Class</string>
+    <string name="price_msg">Enter Price</string>
+    <array name="questions">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rd</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th</item>
+        <item>7th</item>
+        <item>8th</item>
+        <item>9th</item>
+        <item>10th</item>
+        <item>11th</item>
+        <item>12th</item>
+    </array>
 </resources>

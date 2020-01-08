@@ -18,29 +18,9 @@ android {
         }
     }
     buildTypes {
-        debug {
-            ext.enableCrashlytics = false
-            ext.alwaysUpdateBuildId = false
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    flavorDimensions "stage"
-
-    //added for reducing the build time. ref: https://developer.android.com/studio/build/optimize-your-build
-    productFlavors {
-        dev {
-            dimension "stage"
-            minSdkVersion 25
-            resConfigs "en", "xxhdpi"
-            versionNameSuffix "-dev"
-            applicationIdSuffix '.dev'
-        }
-        prod {
-            dimension "stage"
-
         }
     }
 }
@@ -73,5 +53,8 @@ dependencies {
 
     implementation 'com.hbb20:ccp:2.3.4'
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation "com.github.skydoves:powerspinner:1.0.0"
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'

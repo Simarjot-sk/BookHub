@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.simarjot.bookwala.MainActivity;
+import com.simarjot.bookwala.EnterPhoneNumberActivity;
 import com.simarjot.bookwala.R;
 
 public class SettingsFragment extends Fragment {
@@ -29,7 +29,7 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(getActivity(), "logged out successfully", Toast.LENGTH_SHORT).show();
-                Intent mainActivityIntent = new Intent(getActivity(), MainActivity.class);
+                Intent mainActivityIntent = new Intent(getActivity(), EnterPhoneNumberActivity.class);
                 startActivity(mainActivityIntent);
             }
         });

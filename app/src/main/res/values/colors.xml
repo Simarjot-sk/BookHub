@@ -7,5 +7,8 @@
     <color name="grey">#C0C0C0</color>
     <color name="white">#fff</color>
     <color name="black">#000</color>
-    <color name="red">#ed2939</color>
+    <color name="red">#CB3800</color>
+    <color name="blue">#0089D8</color>
+    <color name="pink">#EA004A</color>
+    <color name="background">#e7e7e7</color>
 </resources>

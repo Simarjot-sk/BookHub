@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +16,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -49,13 +46,14 @@ public class OtpActivity extends AppCompatActivity {
             public void onInteractionListener() {
                 // fired when user types something in the Otpbox
             }
+
             @Override
             public void onOTPComplete(String otp) {
                 OtpActivity.this.otp = otp;
             }
         });
 
-        mobileNo = getIntent().getStringExtra(MainActivity.MOBILE_EXTRA);
+        mobileNo = getIntent().getStringExtra(EnterPhoneNumberActivity.MOBILE_EXTRA);
 
         startFirebaseLogin();
 
@@ -67,16 +65,13 @@ public class OtpActivity extends AppCompatActivity {
                 mCallbacks);        // OnVerificationStateChangedCallbacks
 
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(otp==null || otp.length()<6){
-                    Toast.makeText(OtpActivity.this, "please enter the OTP", Toast.LENGTH_SHORT).show();
-                }else{
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, otp);
-                    Log.d("nerd", credential.getSmsCode());
-                    signinWithPhone(credential);
-                }
+        btnSignIn.setOnClickListener(v -> {
+            if (otp == null || otp.length() < 6) {
+                Toast.makeText(OtpActivity.this, "please enter the OTP", Toast.LENGTH_SHORT).show();
+            } else {
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, otp);
+                Log.d("nerd", credential.getSmsCode());
+                signInWithPhone(credential);
             }
         });
     }
@@ -89,46 +84,46 @@ public class OtpActivity extends AppCompatActivity {
 
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                Toast.makeText(OtpActivity.this,"verification completed",Toast.LENGTH_SHORT).show();
-                Intent homeIntent = new Intent(OtpActivity.this, HomeActivity.class);
-                startActivity(homeIntent);
+
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Toast.makeText(OtpActivity.this,"verification fialed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(OtpActivity.this, "verification failed", Toast.LENGTH_SHORT).show();
+                Log.d(EnterPhoneNumberActivity.TAG, "verification failed", e);
             }
 
             @Override
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 verificationCode = s;
-                tvMobileNo.setText("OTP has been sent to you on " + getIntent().getStringExtra(MainActivity.MOBILE_EXTRA_FORMATTED));
-                Toast.makeText(OtpActivity.this,"Code sent",Toast.LENGTH_SHORT).show();
+                tvMobileNo.setText("OTP has been sent to you on " + getIntent().getStringExtra(EnterPhoneNumberActivity.MOBILE_EXTRA_FORMATTED));
+                Toast.makeText(OtpActivity.this, "Code sent", Toast.LENGTH_SHORT).show();
+                Log.d(EnterPhoneNumberActivity.TAG, verificationCode);
             }
         };
     }
 
-    private void signinWithPhone(PhoneAuthCredential credential) {
+    private void signInWithPhone(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(OtpActivity.this, "otp is correct", Toast.LENGTH_SHORT).show();
-                            boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
-                            if(isNewUser){
-                                Intent registrationIntent = new Intent(OtpActivity.this, RegistrationActivity.class);
-                                registrationIntent.putExtra(MainActivity.MOBILE_EXTRA, mobileNo);
-                                startActivity(registrationIntent);
-                            }else{
-                                Intent homeIntent = new Intent(OtpActivity.this, HomeActivity.class);
-                                startActivity(homeIntent);
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(OtpActivity.this, "otp is correct", Toast.LENGTH_SHORT).show();
+                        boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
+                        if (isNewUser) {
+                            Intent registrationIntent = new Intent(OtpActivity.this, RegistrationActivity.class);
+                            registrationIntent.putExtra(EnterPhoneNumberActivity.MOBILE_EXTRA, mobileNo);
+                            startActivity(registrationIntent);
                         } else {
-                            Toast.makeText(OtpActivity.this,"Incorrect OTP",Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_OK);
+                            finish();
                         }
+                    } else {
+                        Toast.makeText(this, "Incorrect OTP" +
+                                "", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }).addOnFailureListener(e -> {
+            Log.d(EnterPhoneNumberActivity.TAG, "verification failed", e);
+        });
     }
 }

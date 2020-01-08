@@ -1,13 +1,18 @@
 package com.simarjot.bookwala;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.simarjot.bookwala.ui.ChatFragment;
 import com.simarjot.bookwala.ui.DiscoverFragment;
 import com.simarjot.bookwala.ui.SearchFragment;
@@ -15,6 +20,7 @@ import com.simarjot.bookwala.ui.SellFragment;
 import com.simarjot.bookwala.ui.SettingsFragment;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    public static final int ENTER_PHONE_FOR_LOGIN = 112;
     private DiscoverFragment discoverFragment;
     private SellFragment sellFragment;
     private SettingsFragment settingsFragment;
@@ -23,8 +29,14 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        if (isNoUserLoggedIn()) {
+            Intent loginIntent = new Intent(HomeActivity.this, EnterPhoneNumberActivity.class);
+            startActivityForResult(loginIntent, ENTER_PHONE_FOR_LOGIN);
+        }
 
         discoverFragment = new DiscoverFragment();
         sellFragment = new SellFragment();
@@ -37,12 +49,17 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         navigationView.setOnNavigationItemSelectedListener(this);
     }
 
+    private boolean isNoUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user == null;
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         Fragment fragment = null;
 
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.discover:
                 fragment = discoverFragment;
                 break;
@@ -71,5 +88,15 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ENTER_PHONE_FOR_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
