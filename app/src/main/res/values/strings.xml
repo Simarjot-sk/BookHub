@@ -21,7 +21,8 @@
     <string name="subject_msg">Subject</string>
     <string name="class_msg">Class</string>
     <string name="price_msg">Enter Price</string>
-    <array name="questions">
+    <string name="cover_image_msg">Cover Image</string>
+    <array name="class_seekbar_captions">
         <item>1st</item>
         <item>2nd</item>
         <item>3rd</item>

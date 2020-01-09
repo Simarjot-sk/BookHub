@@ -54,6 +54,7 @@
         app:layout_constraintTop_toTopOf="@+id/imagebar_guide_up">
 
 
+
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/flex_box_layout"
             android:layout_width="match_parent"

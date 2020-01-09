@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="LabeledEditText">
+        <attr name="hint" format="string"/>
+        <attr name="lines" format="integer"/>
+    </declare-styleable>
+</resources>

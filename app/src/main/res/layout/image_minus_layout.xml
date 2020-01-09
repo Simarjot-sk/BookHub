@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schema.android.com/apk/res-auto"
     xmlns:app2="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+   android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/roundedImageView"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
         app2:layout_constraintBottom_toBottomOf="parent"
         app2:layout_constraintEnd_toEndOf="parent"
         app2:layout_constraintStart_toStartOf="parent"
@@ -27,8 +26,25 @@
         android:layout_height="26dp"
         android:elevation="5dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/minus_square"
+        android:src="@drawable/cross_red"
         app2:layout_constraintEnd_toEndOf="@+id/roundedImageView"
         app2:layout_constraintTop_toTopOf="@+id/roundedImageView"
         app2:riv_corner_radius="2.34dp" />
+
+    <TextView
+        android:id="@+id/cover_image_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cover_image_msg_background"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="2dp"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:text="@string/cover_image_msg"
+        app2:layout_constraintBottom_toBottomOf="@+id/roundedImageView"
+        app2:layout_constraintEnd_toEndOf="@+id/roundedImageView"
+        app2:layout_constraintStart_toStartOf="@+id/roundedImageView"
+        app2:layout_constraintTop_toBottomOf="@+id/roundedImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

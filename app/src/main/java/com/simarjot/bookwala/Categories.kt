@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.simarjot.bookwala.cat.CollegeCatActivity
 import com.simarjot.bookwala.cat.SchoolCatActivity
 import com.simarjot.bookwala.helpers.Helper
 import kotlinx.android.synthetic.main.activity_categories2.*
@@ -46,8 +46,14 @@ class Categories : AppCompatActivity() {
             editor.putString(Helper.BOOK_CATEGORY, category)
             editor.apply()
 
-            val intent = Intent(this@Categories, SchoolCatActivity::class.java)
-            startActivity(intent)
+            if (category.equals("school")){
+                val intent = Intent(this@Categories, SchoolCatActivity::class.java)
+                startActivity(intent)
+            }else if (category.equals("college")){
+                val intent = Intent(this@Categories, CollegeCatActivity::class.java)
+                startActivity(intent)
+            }
+
         }
     }
 

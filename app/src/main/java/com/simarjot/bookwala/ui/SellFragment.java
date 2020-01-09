@@ -151,7 +151,7 @@ public class SellFragment extends Fragment {
         options.setCropFrameColor(ContextCompat.getColor(getActivity(), R.color.dark_grey));
         options.setActiveWidgetColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         options.setRootViewBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black));
-        options.setMaxBitmapSize(10000);
+        options.setMaxBitmapSize(1000);
         options.setCompressionQuality(100);
 
         UCrop.of(selectedImage, destinationUri)
