@@ -35,9 +35,6 @@
             android:name=".Categories"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CoverImageSelectorActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".EnterPhoneNumberActivity"
             android:screenOrientation="portrait" />
         <activity

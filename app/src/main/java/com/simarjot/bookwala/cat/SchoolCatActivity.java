@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -53,6 +55,9 @@ public class SchoolCatActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ImageButton backButtom = findViewById(R.id.back_button);
+        backButtom.setOnClickListener(v -> finish());
         SharedPreferences prefs = getSharedPreferences(Helper.BOOK_IMAGE_PREFS, MODE_PRIVATE);
         String coverImageUrl = prefs.getString(Helper.COVER_IMAGE, null);
         mCoverImage.setImageURI(Uri.parse(coverImageUrl));

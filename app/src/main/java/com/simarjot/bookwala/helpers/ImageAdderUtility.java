@@ -6,10 +6,10 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.flexbox.FlexboxLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.R;
 
@@ -25,7 +25,7 @@ public class ImageAdderUtility {
     private List<ConstraintLayout> imageContainers;
 
     //Widgets
-    private FlexboxLayout layout;
+    private LinearLayout layout;
 
     public ImageAdderUtility(Context context, View view) {
         layout = view.findViewById(R.id.flex_box_layout);
@@ -36,7 +36,6 @@ public class ImageAdderUtility {
 
     public void addImage(Uri imageUri){
         lastImageIndex++;
-
         imageUris.add(imageUri.toString());
         LayoutInflater inflater = LayoutInflater.from(context);
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.image_minus_layout, null, false);
@@ -111,5 +110,9 @@ public class ImageAdderUtility {
     }
     public List<String> getImageUris(){
         return imageUris;
+    }
+
+    public int getCoverImageIndex() {
+        return coverImageIndex;
     }
 }

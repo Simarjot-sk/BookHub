@@ -17,6 +17,10 @@ class Categories : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories2)
 
+        back_button.setOnClickListener {
+            finish()
+        }
+
         hideAllTicks()
 
         college.setOnClickListener {

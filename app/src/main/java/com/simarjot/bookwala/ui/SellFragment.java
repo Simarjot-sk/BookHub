@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -28,7 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.simarjot.bookwala.CoverImageSelectorActivity;
+import com.simarjot.bookwala.Categories;
 import com.simarjot.bookwala.EnterPhoneNumberActivity;
 import com.simarjot.bookwala.R;
 import com.simarjot.bookwala.helpers.Helper;
@@ -39,7 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 public class SellFragment extends Fragment {
     private static final int CAMERA_PERMISSION_CODE = 121;
@@ -51,7 +49,6 @@ public class SellFragment extends Fragment {
     //widgets
     private Button doneButton;
     private ImageButton addBtn;
-
 
     @Nullable
     @Override
@@ -66,13 +63,16 @@ public class SellFragment extends Fragment {
 
         doneButton.setOnClickListener(v -> {
             ArrayList<String> imageUris = (ArrayList<String>) imageUtil.getImageUris();
+            int coverImageIndex = imageUtil.getCoverImageIndex();
+
             if (imageUris.size() < 1) {
                 Toast.makeText(getContext(), "Please Add Images of the book", Toast.LENGTH_SHORT).show();
                 return;
             }
             editor.putStringSet(Helper.SELECTED_IMAGES, new HashSet<>(imageUris));
+            editor.putString(Helper.COVER_IMAGE, imageUris.get(coverImageIndex));
             editor.apply();
-            Intent intent = new Intent(getContext(), CoverImageSelectorActivity.class);
+            Intent intent = new Intent(getContext(), Categories.class);
             getActivity().startActivity(intent);
         });
         addBtn.setOnClickListener(v -> getImageFromCameraOrGallery());
