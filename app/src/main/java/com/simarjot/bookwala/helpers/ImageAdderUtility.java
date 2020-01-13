@@ -6,11 +6,12 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.flexbox.FlexboxLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.R;
 
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdderUtility {
-    private static final String TAG = "imageAdder";
     private int lastImageIndex = -1;
     private int coverImageIndex = -1;
     private Context context;
@@ -26,12 +26,10 @@ public class ImageAdderUtility {
     private List<ConstraintLayout> imageContainers;
 
     //Widgets
-    private LinearLayout layout;
-    private HorizontalScrollView scrollView;
+    private FlexboxLayout layout;
 
     public ImageAdderUtility(Context context, View view) {
         layout = view.findViewById(R.id.flex_box_layout);
-        scrollView = view.findViewById(R.id.scroll_view);
         imageUris = new ArrayList<>();
         imageContainers = new ArrayList<>();
         this.context = context;
@@ -64,8 +62,6 @@ public class ImageAdderUtility {
             removeCoverImageMsg();
             imageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
         });
-
-        scrollView.scrollTo(scrollView.getMaxScrollAmount(), 0);
         layout.addView(constraintLayout, lastImageIndex);
     }
 

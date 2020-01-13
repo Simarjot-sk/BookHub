@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         settingsFragment = new SettingsFragment();
         chatFragment = new ChatFragment();
 
-        loadFragment(sellFragment);
+        loadFragment(discoverFragment);
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
     }

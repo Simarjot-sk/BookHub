@@ -54,7 +54,7 @@ public class LabeledEditText extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.labeled_edit_text, this);
 
-        mDefaultBackground = R.drawable.rounded_edit_text_white;
+        mDefaultBackground = R.drawable.rounded_edit_text_grey;
         mErrorBackground = R.drawable.background_error;
 
         mMainET = this.findViewById(R.id.main_et);

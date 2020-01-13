@@ -22,7 +22,7 @@ import com.warkiz.widget.SeekParams;
 public class AddDetailsActivity extends AppCompatActivity {
     private SharedPreferences mSharedPrefs;
     private Category mCategory;
-    private int mLevel = -1;
+    private int mLevel = 1;
 
     //widgets
     private IndicatorSeekBar mLevelSeekBar;
@@ -104,11 +104,12 @@ public class AddDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
         mDoneButton.setOnClickListener(v ->{
             String author = mAuthorTV.getText();
             String subject = mSubjectTV.getText();
             String title = mTitleTV.getText();
-            if(author!=null && subject!=null && title!=null && mLevel!=-1 ){
+            if(author!=null && subject!=null && title!=null ){
                 SharedPreferences.Editor editor = getSharedPreferences(BookSharedPrefs.SHARED_PREFS, MODE_PRIVATE).edit();
                 editor.putString(BookSharedPrefs.SUBJECT, subject);
                 editor.putInt(BookSharedPrefs.LEVEL, mLevel);
@@ -121,6 +122,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             }
         });
+
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
         SharedPreferences prefs = getSharedPreferences(BookSharedPrefs.SHARED_PREFS, MODE_PRIVATE);

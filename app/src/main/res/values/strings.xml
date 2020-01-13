@@ -24,6 +24,7 @@
     <string name="cover_image_msg">Cover Image</string>
     <string name="semester_msg">Semester</string>
     <string name="semester">Semester %d </string>
+    <string name="done_msg">Almost Done!\nJust add\nDescription\nand Price</string>
     <array name="class_seekbar_captions">
         <item>1st</item>
         <item>2nd</item>
