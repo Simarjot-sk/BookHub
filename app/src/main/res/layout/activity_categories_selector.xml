@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.simarjot.bookwala.Categories">
+    tools:context="com.simarjot.bookwala.CategorySelectorActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -77,88 +77,52 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/competitive"
-                app:layout_constraintEnd_toEndOf="@+id/school"
+                app:layout_constraintEnd_toEndOf="@+id/school_iv"
                 app:layout_constraintHorizontal_bias="0.487"
-                app:layout_constraintStart_toStartOf="@+id/competitive"
-                app:layout_constraintTop_toBottomOf="@+id/competitive" />
+                app:layout_constraintStart_toStartOf="@+id/competitive_iv"
+                app:layout_constraintTop_toBottomOf="@+id/competitive_iv" />
 
-            <ImageButton
-                android:id="@+id/school"
+            <Button
+                android:id="@+id/school_iv"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/school"
                 android:scaleType="centerInside"
-                app:layout_constraintBottom_toTopOf="@+id/competitive"
-                app:layout_constraintEnd_toStartOf="@+id/college"
+                app:layout_constraintBottom_toTopOf="@+id/competitive_iv"
+                app:layout_constraintEnd_toStartOf="@+id/college_iv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <ImageButton
-                android:id="@+id/college"
+            <Button
+                android:id="@+id/college_iv"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/college"
                 android:scaleType="centerInside"
-                app:layout_constraintBottom_toTopOf="@+id/other"
+                app:layout_constraintBottom_toTopOf="@+id/others_iv"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/school"
+                app:layout_constraintStart_toEndOf="@+id/school_iv"
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <ImageButton
-                android:id="@+id/competitive"
+            <Button
+                android:id="@+id/competitive_iv"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/competetive"
                 android:scaleType="centerInside"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/other"
+                app:layout_constraintEnd_toStartOf="@+id/others_iv"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/school"
+                app:layout_constraintTop_toBottomOf="@+id/school_iv"
                 />
 
             <Button
-                android:id="@+id/college_tick"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/tick_in_circle"
-                android:clickable="false"
-                app:layout_constraintEnd_toEndOf="@+id/college"
-                app:layout_constraintTop_toTopOf="@+id/college" />
-
-            <Button
-                android:id="@+id/competitive_tick"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/tick_in_circle"
-                android:clickable="false"
-                app:layout_constraintEnd_toEndOf="@+id/competitive"
-                app:layout_constraintTop_toTopOf="@+id/competitive" />
-
-            <Button
-                android:id="@+id/others_tick"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/tick_in_circle"
-                android:clickable="false"
-                app:layout_constraintEnd_toEndOf="@+id/other"
-                app:layout_constraintTop_toTopOf="@+id/other" />
-
-            <Button
-                android:id="@+id/school_tick"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/tick_in_circle"
-                android:clickable="false"
-                app:layout_constraintEnd_toEndOf="@+id/school"
-                app:layout_constraintTop_toTopOf="@+id/school" />
-
-            <ImageButton
-                android:id="@+id/other"
+                android:id="@+id/others_iv"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/others"
@@ -166,8 +130,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/competitive"
-                app:layout_constraintTop_toBottomOf="@+id/college" />
+                app:layout_constraintStart_toEndOf="@+id/competitive_iv"
+                app:layout_constraintTop_toBottomOf="@+id/college_iv" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -175,9 +139,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/school"
-                app:layout_constraintEnd_toEndOf="@+id/school"
-                app:layout_constraintStart_toStartOf="@+id/school"
-                app:layout_constraintTop_toBottomOf="@+id/school" />
+                app:layout_constraintEnd_toEndOf="@+id/school_iv"
+                app:layout_constraintStart_toStartOf="@+id/school_iv"
+                app:layout_constraintTop_toBottomOf="@+id/school_iv" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -185,9 +149,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/college"
-                app:layout_constraintEnd_toEndOf="@+id/college"
-                app:layout_constraintStart_toStartOf="@+id/college"
-                app:layout_constraintTop_toBottomOf="@+id/college" />
+                app:layout_constraintEnd_toEndOf="@+id/college_iv"
+                app:layout_constraintStart_toStartOf="@+id/college_iv"
+                app:layout_constraintTop_toBottomOf="@+id/college_iv" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -195,10 +159,54 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/others"
-                app:layout_constraintEnd_toEndOf="@+id/other"
-                app:layout_constraintStart_toStartOf="@+id/other"
-                app:layout_constraintTop_toBottomOf="@+id/other" />
+                app:layout_constraintEnd_toEndOf="@+id/others_iv"
+                app:layout_constraintStart_toStartOf="@+id/others_iv"
+                app:layout_constraintTop_toBottomOf="@+id/others_iv" />
 
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/school_bg"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:src="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="@+id/school_iv"
+                app:layout_constraintEnd_toEndOf="@+id/school_iv"
+                app:layout_constraintStart_toStartOf="@+id/school_iv"
+                app:layout_constraintTop_toTopOf="@+id/school_iv"
+                app:riv_oval="true" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/college_bg"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:src="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="@+id/college_iv"
+                app:layout_constraintEnd_toEndOf="@+id/college_iv"
+                app:layout_constraintStart_toStartOf="@+id/college_iv"
+                app:layout_constraintTop_toTopOf="@+id/college_iv"
+                app:riv_oval="true" />
+
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/competitive_bg"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:src="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="@+id/competitive_iv"
+                app:layout_constraintEnd_toEndOf="@+id/competitive_iv"
+                app:layout_constraintStart_toStartOf="@+id/competitive_iv"
+                app:layout_constraintTop_toTopOf="@+id/competitive_iv"
+                app:riv_oval="true" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/others_bg"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:src="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="@+id/others_iv"
+                app:layout_constraintEnd_toEndOf="@+id/others_iv"
+                app:layout_constraintStart_toStartOf="@+id/others_iv"
+                app:layout_constraintTop_toTopOf="@+id/others_iv"
+                app:riv_oval="true" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

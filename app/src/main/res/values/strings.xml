@@ -22,6 +22,8 @@
     <string name="class_msg">Class</string>
     <string name="price_msg">Enter Price</string>
     <string name="cover_image_msg">Cover Image</string>
+    <string name="semester_msg">Semester</string>
+    <string name="semester">Semester %d </string>
     <array name="class_seekbar_captions">
         <item>1st</item>
         <item>2nd</item>

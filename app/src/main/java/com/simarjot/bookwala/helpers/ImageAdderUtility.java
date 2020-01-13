@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,9 +27,11 @@ public class ImageAdderUtility {
 
     //Widgets
     private LinearLayout layout;
+    private HorizontalScrollView scrollView;
 
     public ImageAdderUtility(Context context, View view) {
         layout = view.findViewById(R.id.flex_box_layout);
+        scrollView = view.findViewById(R.id.scroll_view);
         imageUris = new ArrayList<>();
         imageContainers = new ArrayList<>();
         this.context = context;
@@ -61,13 +64,15 @@ public class ImageAdderUtility {
             removeCoverImageMsg();
             imageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
         });
+
+        scrollView.scrollTo(scrollView.getMaxScrollAmount(), 0);
         layout.addView(constraintLayout, lastImageIndex);
     }
 
     private void remove(int removeIndex){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setItems(new CharSequence[]{"Remove Image", "Cancel"}, (dialog, which) -> {
-            if(which==0){//Remove Image Selected
+        alertBuilder.setTitle("Remove Image");
+        alertBuilder.setPositiveButton("Ok",(dialog, which) -> {
                 imageUris.remove(removeIndex);
                 imageContainers.remove(removeIndex);
                 layout.removeViewAt(removeIndex);
@@ -77,7 +82,9 @@ public class ImageAdderUtility {
                     makeFirstImageCover();
                 }
                 updateTags();
-            }
+        });
+        alertBuilder.setNegativeButton("Cancel", (dialog, which) -> {
+
         });
         alertBuilder.show();
     }
@@ -102,12 +109,14 @@ public class ImageAdderUtility {
             coverImageMsg.setVisibility(View.INVISIBLE);
         }
     }
+
     private void makeFirstImageCover(){
         if(imageContainers.size()>=1){
             coverImageIndex = 0;
             imageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
         }
     }
+
     public List<String> getImageUris(){
         return imageUris;
     }

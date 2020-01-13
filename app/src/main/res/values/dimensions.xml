@@ -5,4 +5,5 @@
     <dimen name="formLine">.62</dimen>
     <dimen name="messageLine">.47</dimen>
     <dimen name="et_padding">15dp</dimen>
+    <dimen name="radius">10dp</dimen>
 </resources>

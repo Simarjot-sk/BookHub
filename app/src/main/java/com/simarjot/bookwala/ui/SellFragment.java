@@ -27,11 +27,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.simarjot.bookwala.Categories;
+import com.simarjot.bookwala.CategorySelectorActivity;
 import com.simarjot.bookwala.EnterPhoneNumberActivity;
 import com.simarjot.bookwala.R;
 import com.simarjot.bookwala.helpers.Helper;
 import com.simarjot.bookwala.helpers.ImageAdderUtility;
+import com.simarjot.bookwala.model.BookSharedPrefs;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class SellFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sell_new, null);
         imageUtil = new ImageAdderUtility(getContext(), view);
-        SharedPreferences pref = getActivity().getSharedPreferences(Helper.BOOK_IMAGE_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences(BookSharedPrefs.SHARED_PREFS, Context.MODE_PRIVATE);
         editor = pref.edit();
 
         doneButton = view.findViewById(R.id.done_btn);
@@ -69,10 +70,10 @@ public class SellFragment extends Fragment {
                 Toast.makeText(getContext(), "Please Add Images of the book", Toast.LENGTH_SHORT).show();
                 return;
             }
-            editor.putStringSet(Helper.SELECTED_IMAGES, new HashSet<>(imageUris));
-            editor.putString(Helper.COVER_IMAGE, imageUris.get(coverImageIndex));
+            editor.putStringSet(BookSharedPrefs.IMAGE_URIS, new HashSet<>(imageUris));
+            editor.putString(BookSharedPrefs.COVER_IMAGE_URI, imageUris.get(coverImageIndex));
             editor.apply();
-            Intent intent = new Intent(getContext(), Categories.class);
+            Intent intent = new Intent(getContext(), CategorySelectorActivity.class);
             getActivity().startActivity(intent);
         });
         addBtn.setOnClickListener(v -> getImageFromCameraOrGallery());
@@ -183,42 +184,4 @@ public class SellFragment extends Fragment {
         theFile = file;
         return file;
     }
-
-
-//    private void uploadImageToFirebase(){
-//
-//        if(imageUtil.getCurrentIndex()<3) return;
-//
-//        String postId = UUID.randomUUID().toString();
-//
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
-//        StorageReference storageRef = storage.getReference();
-//        StorageReference booksRef = storageRef.child("images/books/" + postId);
-//
-//        int i=0;
-//      //  List<Uri> bookImageUris = imageUtil.getBookImageUris();
-//        //for(Uri uri:bookImageUris){
-//            StorageReference imageBunch = booksRef.child(postId + "__" + (++i) +".jpg");
-//            StorageMetadata metadata = new StorageMetadata.Builder()
-//                    .setCustomMetadata("createdAt", new Date().toString()).build();
-//            imageBunch.updateMetadata(metadata);
-//            imageBunch.putFile(uri).addOnCanceledListener(new OnCanceledListener() {
-//                @Override
-//                public void onCanceled() {
-//                    Toast.makeText(getContext(), "Image upload Cancelled", Toast.LENGTH_SHORT).show();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(getContext(), "Image upload Failed", Toast.LENGTH_SHORT).show();
-//                }
-//            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Toast.makeText(getActivity(), "image uploaded successfully", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//    }
-
 }

@@ -22,7 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.mikhaellopez.circularimageview.CircularImageView;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.helpers.Helper;
 import com.yalantis.ucrop.UCrop;
 
@@ -33,7 +33,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final String TAG = "nerd";
     private EditText name;
     private EditText email;
-    private CircularImageView profileView;
+    private RoundedImageView profileView;
     private ImageView backView;
     private Uri imageUri;
 
@@ -60,23 +60,17 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        profileView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Helper.isReadStoragePermissionGranted(RegistrationActivity.this) &&
-                        Helper.isReadStoragePermissionGranted(RegistrationActivity.this)){
-                    Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
-                }
+        profileView.setOnClickListener(v -> {
+            if(Helper.isReadStoragePermissionGranted(RegistrationActivity.this) &&
+                    Helper.isReadStoragePermissionGranted(RegistrationActivity.this)){
+                Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
             }
         });
-        CircularImageView plusIcon = findViewById(R.id.plus_icon);
-        plusIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Helper.isReadStoragePermissionGranted(RegistrationActivity.this) &&
-                        Helper.isReadStoragePermissionGranted(RegistrationActivity.this)){
-                    Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
-                }
+        RoundedImageView plusIcon = findViewById(R.id.plus_icon);
+        plusIcon.setOnClickListener(v -> {
+            if(Helper.isReadStoragePermissionGranted(RegistrationActivity.this) &&
+                    Helper.isReadStoragePermissionGranted(RegistrationActivity.this)){
+                Helper.pickImageFromGallery(RegistrationActivity.this, GALLERY_REQUEST_CODE);
             }
         });
     }

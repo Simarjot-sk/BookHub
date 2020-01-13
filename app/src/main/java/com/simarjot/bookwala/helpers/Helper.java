@@ -2,32 +2,20 @@ package com.simarjot.bookwala.helpers;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.util.Patterns;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.simarjot.bookwala.R;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.IOException;
 
 public class Helper {
     public static final String TAG = "nerd";
-    public static final String BOOK_IMAGE_PREFS = "book_shared_prefs";
-    public static final String SELECTED_IMAGES = "selected_images";
-    public static final String COVER_IMAGE = "cover_image";
-    public static final String BOOK_CATEGORY = "book_category";
 
     public static boolean isValidEmail(CharSequence target) {
         return (Patterns.EMAIL_ADDRESS.matcher(target).matches());

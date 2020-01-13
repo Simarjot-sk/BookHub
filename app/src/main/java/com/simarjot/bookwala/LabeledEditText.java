@@ -102,6 +102,12 @@ public class LabeledEditText extends LinearLayout {
         addTextChangedListener();
     }
 
+    public void setHint(String hint){
+        mHint = hint;
+        mMainET.setHint(mHint);
+        mLabelTV.setText(mHint);
+    }
+
     public boolean hasErrors(){
         return hasErros;
     }
