@@ -6,10 +6,278 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".SeeDetailsActivity">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/ic_left_white_24dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/view_pager_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/title_tv"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="40dp"
+                    android:text="@string/book_details_label" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/view_pager_card"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/slider_size"
+            android:layout_marginStart="@dimen/top_level_margin"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="@dimen/top_level_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/prev_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/ic_left_green_24dp"
+                    />
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/image_slider"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/slider_size"
+                    android:layout_weight="4" />
+
+                <Button
+                    android:id="@+id/next_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/ic_right_green_24dp" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/book_details_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/top_level_margin"
+            android:layout_marginStart="@dimen/top_level_margin"
+            android:layout_marginEnd="@dimen/top_level_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_pager_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/top_level_padding">
+
+                <TextView
+                    android:id="@+id/price_tv"
+                    style="@style/textViewData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="textview"
+                    app:layout_constraintStart_toStartOf="@+id/price_label"
+                    app:layout_constraintTop_toBottomOf="@+id/price_label" />
+
+                <TextView
+                    android:id="@+id/author_label"
+                    style="@style/textViewHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/author_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/subject_label"
+                    app:layout_constraintTop_toTopOf="@+id/subject_label" />
+
+                <TextView
+                    android:id="@+id/subject_label"
+                    style="@style/textViewHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/subject_label"
+                    app:layout_constraintStart_toStartOf="@+id/price_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/price_tv" />
+
+                <TextView
+                    android:id="@+id/author_tv"
+                    style="@style/textViewData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="TextView"
+                    app:layout_constraintStart_toStartOf="@+id/author_label"
+                    app:layout_constraintTop_toBottomOf="@+id/author_label" />
+
+                <TextView
+                    android:id="@+id/subject_tv"
+                    style="@style/textViewData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    app:layout_constraintStart_toStartOf="@+id/subject_label"
+                    app:layout_constraintTop_toBottomOf="@+id/subject_label" />
+
+                <TextView
+                    android:id="@+id/desc_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView9"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                <TextView
+                    android:id="@+id/price_label"
+                    style="@style/textViewHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    style="@style/textViewHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/top_level_padding"
+                    android:text="Description"
+                    app:layout_constraintStart_toStartOf="@+id/subject_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/subject_tv" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_level_margin"
+            android:layout_marginTop="@dimen/top_level_margin"
+            android:layout_marginEnd="@dimen/top_level_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/book_details_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/top_level_padding">
+
+                <TextView
+                    android:id="@+id/seller_details_label"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seller Details"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/seller_image_view"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="@dimen/top_level_padding"
+                    android:layout_marginTop="@dimen/top_level_padding"
+                    android:src="@color/red"
+                    app:layout_constraintStart_toStartOf="@+id/seller_details_label"
+                    app:layout_constraintTop_toBottomOf="@+id/seller_details_label"
+                    app:riv_border_color="@color/colorPrimary"
+                    app:riv_border_width="4dp"
+                    app:riv_corner_radius="75dp"
+                    app:riv_oval="true" />
+
+                <TextView
+                    android:id="@+id/seller_name_tv"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="seller name"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/seller_image_view"
+                    app:layout_constraintTop_toBottomOf="@+id/seller_details_label" />
+
+                <Button
+                    android:layout_width="00dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/top_level_margin"
+                    android:layout_marginEnd="@dimen/top_level_margin"
+                    android:background="@drawable/rounded_button"
+                    android:text="@string/chat_with_seller"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/seller_image_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/seller_image_view"
+                    app:layout_constraintTop_toBottomOf="@+id/seller_name_tv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_level_margin"
+            android:layout_marginTop="@dimen/top_level_margin"
+            android:layout_marginEnd="@dimen/top_level_margin"
+            android:layout_marginBottom="@dimen/top_level_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2"
+            app:layout_constraintVertical_bias="0.0">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/top_level_padding">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:text="Posted in"
+                    />
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

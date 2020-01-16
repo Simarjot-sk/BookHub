@@ -33,23 +33,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="288dp"
+        <com.simarjot.bookwala.LabeledEditText
+            android:id="@+id/name_let"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_edit_text"
-            android:drawableStart="@drawable/name"
-            android:drawablePadding="14dp"
-            android:hint="Name"
-            android:inputType="textPersonName"
-            android:padding="12dp"
-            android:paddingStart="17dp"
-            android:textColorHint="#000"
+            app:drawableLeft="@drawable/name"
+            app:hint="Name"
             app:layout_constraintBottom_toTopOf="@+id/guideline8"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline8"
-            app:layout_constraintWidth_percent=".7" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/button2"
@@ -62,26 +54,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/email_let"
+            app:layout_constraintVertical_bias="1.0"
+            style="?attr/selectableItemBackgroundBorderless"/>
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="288dp"
+        <com.simarjot.bookwala.LabeledEditText
+            android:id="@+id/email_let"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_edit_text"
-            android:drawableStart="@drawable/email_id"
-            android:drawablePadding="10dp"
-            android:ems="10"
-            android:hint="Email"
+            android:layout_marginTop="@dimen/top_level_padding"
+            app:drawableLeft="@drawable/email"
+            app:hint="Email"
             android:inputType="textEmailAddress"
-            android:padding="12dp"
-            android:textColorHint="#000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/name_let"
             app:layout_constraintWidth_percent=".7" />
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -111,20 +98,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="@dimen/messageLine"/>
+            app:layout_constraintGuide_percent="@dimen/messageLine" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="@dimen/formLine"/>
+            app:layout_constraintGuide_percent="@dimen/formLine" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="@dimen/buttonLine"/>
+            app:layout_constraintGuide_percent="@dimen/buttonLine" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

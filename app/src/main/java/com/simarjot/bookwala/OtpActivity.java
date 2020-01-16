@@ -115,6 +115,7 @@ public class OtpActivity extends AppCompatActivity {
                             registrationIntent.putExtra(EnterPhoneNumberActivity.MOBILE_EXTRA, mobileNo);
                             startActivity(registrationIntent);
                         } else {
+                            Toast.makeText(this, "not a new user", Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK);
                             finish();
                         }

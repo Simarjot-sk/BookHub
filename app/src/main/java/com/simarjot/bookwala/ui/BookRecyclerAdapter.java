@@ -1,43 +1,41 @@
 package com.simarjot.bookwala.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.simarjot.bookwala.R;
+import com.simarjot.bookwala.SeeDetailsActivity;
 import com.simarjot.bookwala.model.Book;
-import com.simarjot.bookwala.model.Category;
 
-public class BookRecyclerAdapter extends FirestoreRecyclerAdapter<Book, BookRecyclerAdapter.BookHolder> {
+public class BookRecyclerAdapter extends FirestorePagingAdapter<Book, BookRecyclerAdapter.BookHolder> {
     Context mContext;
 
-    public BookRecyclerAdapter(@NonNull FirestoreRecyclerOptions<Book> options) {
+    public BookRecyclerAdapter(@NonNull FirestorePagingOptions<Book> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull BookHolder holder, int position, @NonNull Book model) {
-        holder.titleTV.setText(model.getTitle());
-        if(model.getCategory() == Category.COLLEGE){
-            holder.levelTV.setText("Semester " + model.getLevel());
-        }else if(model.getCategory() == Category.SCHOOL){
-            holder.levelTV.setText("Class " + model.getLevel());
-        }else{
-            holder.levelTV.setText("");
-        }
-        holder.priceTV.setText(model.getCurrency() + " " + model.getPrice());
-        holder.itemView.setOnClickListener(v -> Toast.makeText(mContext, model.getTitle(), Toast.LENGTH_SHORT).show());
-        Glide.with(mContext).load(model.getCoverDownloadUri()).into(holder.coverIV);
+    protected void onBindViewHolder(@NonNull BookHolder holder, int position, @NonNull Book book) {
+        holder.titleTV.setText(book.getTitle());
+        holder.subjectTV.setText(book.getSubject());
+        holder.priceTV.setText(book.priceWithCurrency());
+        holder.itemView.setOnClickListener(v -> {
+            Intent seeDetailsIntent = new Intent(mContext, SeeDetailsActivity.class);
+            seeDetailsIntent.putExtra(SeeDetailsActivity.BOOK_EXTRA, book.toJsonString());
+            mContext.startActivity(seeDetailsIntent);
+        });
+        Glide.with(mContext).load(book.getCoverDownloadUri()).into(holder.coverIV);
     }
 
     @NonNull
@@ -51,13 +49,13 @@ public class BookRecyclerAdapter extends FirestoreRecyclerAdapter<Book, BookRecy
     public class BookHolder extends RecyclerView.ViewHolder{
         TextView priceTV;
         TextView titleTV;
-        TextView levelTV;
+        TextView subjectTV;
         ImageView coverIV;
         BookHolder(@NonNull View itemView) {
             super(itemView);
             priceTV = itemView.findViewById(R.id.price_tv);
             titleTV = itemView.findViewById(R.id.title_tv);
-            levelTV = itemView.findViewById(R.id.level_tv);
+            subjectTV = itemView.findViewById(R.id.subject_tv);
             coverIV = itemView.findViewById(R.id.cover_image);
         }
     }

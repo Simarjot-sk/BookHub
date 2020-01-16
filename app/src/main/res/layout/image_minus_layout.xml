@@ -6,12 +6,11 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/roundedImageView"
-        android:layout_width="100dp"
+        android:layout_width="00dp"
         android:layout_height="100dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="@dimen/level_2_padding"
+        android:layout_marginBottom="@dimen/level_2_padding"
         android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher"
         app2:layout_constraintBottom_toBottomOf="parent"
         app2:layout_constraintEnd_toEndOf="parent"
         app2:layout_constraintStart_toStartOf="parent"

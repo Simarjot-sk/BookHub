@@ -1,64 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="5dp"
-    android:background="@drawable/curved_off_green">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="@dimen/radius">
 
-
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/cover_image"
-        android:layout_width="00dp"
-        android:layout_height="00dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="65dp"
-        android:scaleType="centerCrop"
-        android:src="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:riv_corner_radius="10dp" />
-
-    <TextView
-        android:id="@+id/title_tv"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="TextView"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/cover_image"
-        app:layout_constraintTop_toBottomOf="@+id/cover_image"
-        app:layout_constraintVertical_bias="0.0" />
+        android:background="@drawable/curved_white"
+        android:layout_margin="3dp">
 
-    <TextView
-        android:id="@+id/level_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="TextView"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/title_tv"
-        app:layout_constraintTop_toBottomOf="@+id/title_tv"
-        app:layout_constraintVertical_bias="0.0" />
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/cover_image"
+            android:layout_width="00dp"
+            android:layout_height="00dp"
+            android:scaleType="centerCrop"
+            android:src="@color/blue"
+            app:layout_constraintDimensionRatio="2:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_corner_radius="@dimen/radius" />
 
-    <TextView
-        android:id="@+id/price_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/curved_red"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:text="TextView"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/cover_image"
-        app:layout_constraintTop_toTopOf="@+id/cover_image" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_level_padding"
+            android:layout_marginTop="@dimen/top_level_padding"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/cover_image"
+            app:layout_constraintTop_toBottomOf="@+id/cover_image" />
+
+        <TextView
+            android:id="@+id/subject_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/title_tv"
+            app:layout_constraintTop_toBottomOf="@+id/title_tv"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/cover_image"
+            app:layout_constraintTop_toTopOf="@+id/cover_image" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

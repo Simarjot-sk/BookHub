@@ -2,6 +2,8 @@ package com.simarjot.bookwala.model;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ public class Book {
     private Timestamp createdOn;
     private List<String> imageDownloadUris;
     private String coverDownloadUri;
+    private GeoPoint postedIn;
     //todo add location coordinates
 
     public Book(String title, String author, String subject, String description, String price, String currency, Category category, int level) {
@@ -40,8 +43,26 @@ public class Book {
     public Book() {
     }
 
+    public static Book parse(String json){
+        Gson gson = new Gson();
+        return gson.fromJson(json, Book.class);
+    }
+
+    public String toJsonString(){
+        Gson gson = new Gson();
+        return gson.toJson(this, Book.class);
+    }
+
     public String getBookUUID() {
         return bookUUID;
+    }
+
+    public GeoPoint getPostedIn() {
+        return postedIn;
+    }
+
+    public void setPostedIn(GeoPoint postedIn) {
+        this.postedIn = postedIn;
     }
 
     public Timestamp getCreatedOn() {
@@ -72,12 +93,14 @@ public class Book {
         return level;
     }
 
+    //only made to be used by firebase
+    //do not call this method, use priceWithCurrency() instead
     public String getPrice() {
-        return price;
+        return currency + " " + price;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String priceWithCurrency(){
+        return price;
     }
 
     public Category getCategory() {

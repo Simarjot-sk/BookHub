@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import com.simarjot.bookwala.CategorySelectorActivity;
 import com.simarjot.bookwala.EnterPhoneNumberActivity;
 import com.simarjot.bookwala.R;
+import com.simarjot.bookwala.helpers.GetPictureActivity;
 import com.simarjot.bookwala.helpers.Helper;
 import com.simarjot.bookwala.helpers.ImageAdderUtility;
 import com.simarjot.bookwala.model.BookSharedPrefs;
@@ -58,7 +59,7 @@ public class SellFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sell_new, null);
         mContext = getContext();
-        imageUtil = new ImageAdderUtility(getContext(), view);
+        imageUtil = new ImageAdderUtility(getContext(), view, 5);
         SharedPreferences pref = getActivity().getSharedPreferences(BookSharedPrefs.SHARED_PREFS, Context.MODE_PRIVATE);
         editor = pref.edit();
 
@@ -79,7 +80,11 @@ public class SellFragment extends Fragment {
             Intent intent = new Intent(getContext(), CategorySelectorActivity.class);
             getActivity().startActivity(intent);
         });
-        addBtn.setOnClickListener(v -> getImageFromCameraOrGallery());
+        addBtn.setOnClickListener(v -> {
+            //getImageFromCameraOrGallery();
+            Intent intent = new Intent(getActivity(), GetPictureActivity.class);
+            startActivityForResult(intent, 22);
+        });
         return view;
     }
 
@@ -111,6 +116,9 @@ public class SellFragment extends Fragment {
                     break;
                 case CAMERA_REQUEST_CODE:
                     startCropper(Uri.fromFile(new File(mImageFilePath)));
+                    break;
+                case 22:
+                    imageUtil.addImage(data.getData());
                     break;
             }
         } else {
@@ -234,6 +242,7 @@ public class SellFragment extends Fragment {
             options.setActiveWidgetColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             options.setRootViewBackgroundColor(ContextCompat.getColor(mContext, R.color.black));
             options.setMaxBitmapSize(1000);
+            options.withAspectRatio(2, 3);
             options.setCompressionQuality(100);
 
             UCrop.of(selectedImage, destinationUri)

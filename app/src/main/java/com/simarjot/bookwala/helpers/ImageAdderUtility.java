@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,100 +21,117 @@ import java.util.List;
 public class ImageAdderUtility {
     private int lastImageIndex = -1;
     private int coverImageIndex = -1;
-    private Context context;
-    private List<String> imageUris;
-    private List<ConstraintLayout> imageContainers;
-
+    private int mMaxImages;
+    private Context mContext;
+    private List<String> mImageUris;
+    private List<ConstraintLayout> mImageContainers;
     //Widgets
     private FlexboxLayout layout;
+    private ImageButton mAddImageBTN;
 
-    public ImageAdderUtility(Context context, View view) {
+    public ImageAdderUtility(Context context, View view, int maxImages) {
+        mContext = context;
         layout = view.findViewById(R.id.flex_box_layout);
-        imageUris = new ArrayList<>();
-        imageContainers = new ArrayList<>();
-        this.context = context;
+        mAddImageBTN = view.findViewById(R.id.add_images_btn);
+        mImageUris = new ArrayList<>();
+        mImageContainers = new ArrayList<>();
+        mMaxImages = maxImages;
     }
 
-    public void addImage(Uri imageUri){
+    public void addImage(Uri imageUri) {
         lastImageIndex++;
-        imageUris.add(imageUri.toString());
-        LayoutInflater inflater = LayoutInflater.from(context);
+        mImageUris.add(imageUri.toString());
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         ConstraintLayout constraintLayout = (ConstraintLayout) inflater.inflate(R.layout.image_minus_layout, null, false);
-        imageContainers.add(constraintLayout);
+        mImageContainers.add(constraintLayout);
 
         //making the coverImageMsg visible on the first image added
         makeFirstImageCover();
+        updateAddButton();
 
         RoundedImageView minus = constraintLayout.findViewById(R.id.minus);
         minus.setTag(lastImageIndex);
-        minus.setOnClickListener( v->{
+        minus.setOnClickListener(v -> {
             Log.d("nerd", "clicked " + v.getTag());
-            remove((int)v.getTag());
+            remove((int) v.getTag());
         });
 
         RoundedImageView newImage = constraintLayout.findViewById(R.id.roundedImageView);
         newImage.setImageURI(imageUri);
         newImage.setTag(lastImageIndex);
 
-        newImage.setOnClickListener( v ->{
-            coverImageIndex =(int) v.getTag();
+        newImage.setOnClickListener(v -> {
+            coverImageIndex = (int) v.getTag();
             Log.d("nerd", "coverImageIndex: " + coverImageIndex);
             removeCoverImageMsg();
-            imageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
+            mImageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
         });
         layout.addView(constraintLayout, lastImageIndex);
+        int layoutWidth = layout.getWidth();
+        int padding = 25;
+        int childWidth = (layoutWidth - padding) / 3;
+        constraintLayout.getLayoutParams().width = childWidth;
     }
 
-    private void remove(int removeIndex){
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+    private void remove(int removeIndex) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
         alertBuilder.setTitle("Remove Image");
-        alertBuilder.setPositiveButton("Ok",(dialog, which) -> {
-                imageUris.remove(removeIndex);
-                imageContainers.remove(removeIndex);
-                layout.removeViewAt(removeIndex);
-                Log.d("nerd", "removeIndex: " + removeIndex);
-                lastImageIndex--;
-                if(removeIndex == coverImageIndex){
-                    makeFirstImageCover();
-                }
-                updateTags();
+        alertBuilder.setPositiveButton("Ok", (dialog, which) -> {
+            mImageUris.remove(removeIndex);
+            mImageContainers.remove(removeIndex);
+            layout.removeViewAt(removeIndex);
+            Log.d("nerd", "removeIndex: " + removeIndex);
+            lastImageIndex--;
+            if (removeIndex == coverImageIndex) {
+                makeFirstImageCover();
+            }
+            updateTags();
+            updateAddButton();
         });
         alertBuilder.setNegativeButton("Cancel", (dialog, which) -> {
-
         });
         alertBuilder.show();
     }
 
-    private void updateTags(){
+    private void updateTags() {
         int childCount = layout.getChildCount();
-        for(int i=0;i<childCount;i++){
+        for (int i = 0; i < childCount; i++) {
             View view = layout.getChildAt(i);
             RoundedImageView minus = view.findViewById(R.id.minus);
             RoundedImageView newImage = view.findViewById(R.id.roundedImageView);
             //in case of the plus imageButton there is no minus imageView.
-            if(minus!=null){
+            if (minus != null) {
                 minus.setTag(i);
                 newImage.setTag(i);
             }
         }
     }
 
-    private void removeCoverImageMsg(){
-        for(ConstraintLayout layout : imageContainers){
+    private void updateAddButton() {
+        if (mImageUris.size() >= mMaxImages) {
+            mAddImageBTN.setVisibility(View.GONE);
+        } else {
+            mAddImageBTN.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void removeCoverImageMsg() {
+        for (ConstraintLayout layout : mImageContainers) {
             TextView coverImageMsg = layout.findViewById(R.id.cover_image_msg);
             coverImageMsg.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void makeFirstImageCover(){
-        if(imageContainers.size()>=1){
+    private void makeFirstImageCover() {
+        if (mImageContainers.size() >= 1) {
             coverImageIndex = 0;
-            imageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
+            mImageContainers.get(coverImageIndex).findViewById(R.id.cover_image_msg).setVisibility(View.VISIBLE);
         }
     }
 
-    public List<String> getImageUris(){
-        return imageUris;
+    public List<String> getImageUris() {
+        return mImageUris;
     }
 
     public int getCoverImageIndex() {

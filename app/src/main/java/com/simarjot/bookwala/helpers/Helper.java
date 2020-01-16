@@ -1,18 +1,12 @@
 package com.simarjot.bookwala.helpers;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.util.Patterns;
 
-import androidx.core.app.ActivityCompat;
-
-import java.io.File;
-import java.io.IOException;
+import com.google.firebase.firestore.GeoPoint;
 
 public class Helper {
     public static final String TAG = "nerd";
@@ -21,72 +15,15 @@ public class Helper {
         return (Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    public static boolean isWriteStoragePermissionGranted(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted2");
-                return true;
-            } else {
 
-                Log.v(TAG,"Permission is revoked2");
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted2");
-            return true;
-        }
-    }
-
-    public static boolean isReadStoragePermissionGranted(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted1");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked1");
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted1");
-            return true;
-        }
+    public static GeoPoint getCurrentLocation(Context context){
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        return new GeoPoint(location.getLatitude(), location.getLongitude());
     }
 
 
-    public static File getImageFile() {
-        String imageFileName = "JPEG_" + System.currentTimeMillis() + "_";
-        File storageDir = new File(
-                Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DCIM
-                ), "Camera"
-        );
-        File file = null;
-        try {
-            file = File.createTempFile(
-                    imageFileName, ".jpg", storageDir
-            );
-        }catch (IOException ex){
-            Log.d("nerd", "io exception", ex);
-        }
 
-        return file;
-    }
-
-    public static void pickImageFromGallery(Activity activity, int requestCode){
-        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        // Launching the Intent
-        activity.startActivityForResult(intent,requestCode);
-    }
 }

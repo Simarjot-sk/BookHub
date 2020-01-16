@@ -25,6 +25,11 @@
     <string name="semester_msg">Semester</string>
     <string name="semester">Semester %d </string>
     <string name="done_msg">Almost Done!\nJust add\nDescription\nand Price</string>
+    <string name="book_details_label">Book Details</string>
+    <string name="author_label">Author</string>
+    <string name="price_label">Price</string>
+    <string name="subject_label">Subject</string>
+    <string name="chat_with_seller">Chat with seller</string>
     <array name="class_seekbar_captions">
         <item>1st</item>
         <item>2nd</item>

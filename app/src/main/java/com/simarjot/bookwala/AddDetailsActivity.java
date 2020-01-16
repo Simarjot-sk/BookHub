@@ -44,7 +44,7 @@ public class AddDetailsActivity extends AppCompatActivity {
         mTitleTV = findViewById(R.id.title_et);
         mAuthorTV = findViewById(R.id.author_et);
         mCoverImage = findViewById(R.id.cover_image);
-        mLevelTV = findViewById(R.id.level_tv);
+        mLevelTV = findViewById(R.id.subject_tv);
         mLevelTypeTV = findViewById(R.id.level_type_tv);
         mLevelSeekBar = findViewById(R.id.level_seek_bar);
         mDoneButton = findViewById(R.id.done_btn);
