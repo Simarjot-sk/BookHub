@@ -1,20 +1,16 @@
 package com.simarjot.bookwala;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -25,6 +21,7 @@ import in.aabhasjindal.otptextview.OTPListener;
 import in.aabhasjindal.otptextview.OtpTextView;
 
 public class OtpActivity extends AppCompatActivity {
+    private static final int REGISTRATION_REQUEST_CODE=123;
     private String mobileNo;
     private FirebaseAuth mAuth;
     private String verificationCode;
@@ -37,7 +34,7 @@ public class OtpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
-        ImageButton btnSignIn = findViewById(R.id.button2);
+        ImageButton btnSignIn = findViewById(R.id.submit_btn);
         otpTextView = findViewById(R.id.otp_view);
         tvMobileNo = findViewById(R.id.mobile_tv);
 
@@ -113,7 +110,7 @@ public class OtpActivity extends AppCompatActivity {
                         if (isNewUser) {
                             Intent registrationIntent = new Intent(OtpActivity.this, RegistrationActivity.class);
                             registrationIntent.putExtra(EnterPhoneNumberActivity.MOBILE_EXTRA, mobileNo);
-                            startActivity(registrationIntent);
+                            startActivityForResult(registrationIntent, REGISTRATION_REQUEST_CODE);
                         } else {
                             Toast.makeText(this, "not a new user", Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK);
@@ -126,5 +123,14 @@ public class OtpActivity extends AppCompatActivity {
                 }).addOnFailureListener(e -> {
             Log.d(EnterPhoneNumberActivity.TAG, "verification failed", e);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REGISTRATION_REQUEST_CODE && resultCode == RESULT_OK){
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 }

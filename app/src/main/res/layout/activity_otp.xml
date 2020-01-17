@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
     <ImageButton
-        android:id="@+id/button2"
+        android:id="@+id/submit_btn"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:background="@drawable/next"

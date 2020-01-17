@@ -91,10 +91,12 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/button2"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/next"
+            android:id="@+id/submit_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/next"
+            android:scaleType="centerCrop"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

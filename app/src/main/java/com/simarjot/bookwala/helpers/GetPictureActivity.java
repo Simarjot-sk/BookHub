@@ -1,11 +1,5 @@
 package com.simarjot.bookwala.helpers;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,7 +13,12 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.simarjot.bookwala.EnterPhoneNumberActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import com.simarjot.bookwala.R;
 import com.yalantis.ucrop.UCrop;
 
@@ -34,13 +33,15 @@ public class GetPictureActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 421;
     private static final int WRITE_PERMISSION_CODE = 11;
     private static final int CAMERA_PERMISSION_CODE = 12;
+    public static final String CIRCULAR_DIMMED_LAYER = "ASLDKFJ";
+    private boolean circularDimmedLayer;
     private String mImageFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_picture);
-
+        circularDimmedLayer = getIntent().getBooleanExtra(CIRCULAR_DIMMED_LAYER, false);
         getImageFromCameraOrGallery();
     }
 
@@ -53,6 +54,9 @@ public class GetPictureActivity extends AppCompatActivity {
             } else if (items[which].equals("Choose from Gallery")) {
                 dispatchGalleryIntent();
             }
+        }).setOnCancelListener(dialog -> {
+            setResult(RESULT_CANCELED);
+            finish();
         });
         builder.show();
     }
@@ -148,6 +152,7 @@ public class GetPictureActivity extends AppCompatActivity {
             options.setMaxBitmapSize(1000);
             options.withAspectRatio(2, 3);
             options.setCompressionQuality(100);
+            options.setCircleDimmedLayer(circularDimmedLayer);
 
             UCrop.of(selectedImage, destinationUri)
                     .withMaxResultSize(1000, 1000)
@@ -185,6 +190,29 @@ public class GetPictureActivity extends AppCompatActivity {
                 Log.d(Helper.TAG, "error occurred while starting activity for result " + requestCode, th);
             }
             Log.d("nerd", "result code not ok");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Toast.makeText(this, "on request permissions called", Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < permissions.length; i++) {
+            String permissionName = permissions[i];
+            int grantCode = grantResults[i];
+            if (permissionName.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (grantCode == PackageManager.PERMISSION_GRANTED) {
+                    dispatchGalleryIntent();
+                } else if (grantCode == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, "Cannot perform operation without required permissions", Toast.LENGTH_LONG).show();
+                }
+            } else if (permissionName.equals(Manifest.permission.CAMERA)) {
+                if (grantCode == PackageManager.PERMISSION_GRANTED) {
+                    dispatchCameraIntent();
+                } else if (grantCode == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, "Cannot perform operation without required permissions", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 

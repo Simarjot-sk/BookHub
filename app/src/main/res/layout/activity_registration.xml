@@ -44,19 +44,15 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
-            android:id="@+id/button2"
+            android:id="@+id/submit_btn"
+            style="?attr/selectableItemBackgroundBorderless"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginTop="8dp"
             android:background="@drawable/next"
-            android:onClick="onClickNext"
-            app:layout_constraintBottom_toTopOf="@+id/guideline9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_let"
-            app:layout_constraintVertical_bias="1.0"
-            style="?attr/selectableItemBackgroundBorderless"/>
+            app:layout_constraintTop_toTopOf="@+id/guideline9" />
 
         <com.simarjot.bookwala.LabeledEditText
             android:id="@+id/email_let"
@@ -76,7 +72,11 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:scaleType="centerCrop"
+            app:riv_border_width="3dp"
+            app:riv_border_color="@color/colorPrimary"
             android:src="@drawable/profile_img2"
+            app:riv_oval="true"
+            app:riv_corner_radius="33dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +88,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/plus"
+            app:riv_oval="true"
+            app:riv_corner_radius="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,5 +115,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="@dimen/buttonLine" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/submit_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email_let" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
