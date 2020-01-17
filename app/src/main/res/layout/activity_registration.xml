@@ -22,14 +22,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/back_button"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:src="@drawable/back_button"
+            android:scaleType="centerCrop"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/done"
+            android:src="@drawable/back_button_circle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,10 +47,11 @@
 
         <ImageButton
             android:id="@+id/submit_btn"
-            style="?attr/selectableItemBackgroundBorderless"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/next"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/next"
+            android:scaleType="centerCrop"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"

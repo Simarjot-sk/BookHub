@@ -6,9 +6,5 @@
         </shape>
     </item>
     <item
-        android:top="10dp"
-        android:bottom="10dp"
-        android:right="15dp"
-        android:left="12dp"
-        android:drawable="@drawable/back_button"/>
+        android:drawable="@drawable/ic_left_green_24dp"/>
 </layer-list>
