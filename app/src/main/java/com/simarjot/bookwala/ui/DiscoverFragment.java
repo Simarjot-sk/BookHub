@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,7 +33,6 @@ public class DiscoverFragment extends Fragment {
         mBookRecyclerView.setLayoutManager(layoutManager);
 
         Query query = db.collection("books");
-
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(5)
@@ -44,11 +44,10 @@ public class DiscoverFragment extends Fragment {
                 .setQuery(query, config, Book.class)
                 .build();
 
-        adapter = new BookRecyclerAdapter(options);
+        adapter = new BookRecyclerAdapter(options, (AppCompatActivity) getActivity());
         mBookRecyclerView.setAdapter(adapter);
         return rootView;
     }
-
 
     @Override
     public void onStart() {

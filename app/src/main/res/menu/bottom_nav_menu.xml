@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/discover"
+        android:id="@+id/discover_menu"
         android:icon="@drawable/home"
-        android:title="Discover" />
+        android:title="@string/discover" />
 
     <item
-        android:id="@+id/chat"
+        android:id="@+id/chat_menu"
         android:icon="@drawable/chat"
-        android:title="Chat" />
+        android:title="@string/chat" />
 
     <item
-        android:id="@+id/sell"
+        android:id="@+id/sell_menu"
         android:icon="@drawable/camera"
-        android:title="Sell" />
+        android:title="@string/sell" />
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/search_menu"
         android:icon="@drawable/search"
-        android:title="Search" />
+        android:title="@string/search" />
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/settings_menu"
         android:icon="@drawable/setting"
-        android:title="Settings" />
+        android:title="@string/settings" />
 </menu>

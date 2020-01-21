@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.simarjot.bookwala.ui.ChatFragment;
+import com.simarjot.bookwala.ui.AllChatsFragment;
 import com.simarjot.bookwala.ui.DiscoverFragment;
 import com.simarjot.bookwala.ui.SearchFragment;
 import com.simarjot.bookwala.ui.SellFragment;
@@ -24,9 +24,9 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     private DiscoverFragment discoverFragment;
     private SellFragment sellFragment;
     private SettingsFragment settingsFragment;
-    private ChatFragment chatFragment;
+    private AllChatsFragment chatFragment;
     private SearchFragment searchFragment;
-
+    private BottomNavigationView mNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -42,11 +42,11 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         sellFragment = new SellFragment();
         searchFragment = new SearchFragment();
         settingsFragment = new SettingsFragment();
-        chatFragment = new ChatFragment();
+        chatFragment = new AllChatsFragment();
 
         loadFragment(discoverFragment);
-        BottomNavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.setOnNavigationItemSelectedListener(this);
+        mNavigationView = findViewById(R.id.navigation);
+        mNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     private boolean isNoUserLoggedIn() {
@@ -60,19 +60,19 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         Fragment fragment = null;
 
         switch (menuItem.getItemId()) {
-            case R.id.discover:
+            case R.id.discover_menu:
                 fragment = discoverFragment;
                 break;
-            case R.id.search:
+            case R.id.search_menu:
                 fragment = searchFragment;
                 break;
-            case R.id.settings:
+            case R.id.settings_menu:
                 fragment = settingsFragment;
                 break;
-            case R.id.chat:
+            case R.id.chat_menu:
                 fragment = chatFragment;
                 break;
-            case R.id.sell:
+            case R.id.sell_menu:
                 fragment = sellFragment;
                 break;
         }
@@ -98,5 +98,9 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 Toast.makeText(this, "Logged in successfully", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void changeItem(int itemId) {
+        mNavigationView.setSelectedItemId(itemId);
     }
 }

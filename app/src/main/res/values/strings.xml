@@ -30,6 +30,11 @@
     <string name="price_label">Price</string>
     <string name="subject_label">Subject</string>
     <string name="chat_with_seller">Chat with seller</string>
+    <string name="discover">Discover</string>
+    <string name="chat">Chat</string>
+    <string name="sell">Sell</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
     <array name="class_seekbar_captions">
         <item>1st</item>
         <item>2nd</item>

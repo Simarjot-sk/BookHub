@@ -1,46 +1,40 @@
 package com.simarjot.bookwala;
 
-import android.app.DownloadManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.UrlTileProvider;
 import com.google.gson.Gson;
 import com.simarjot.bookwala.helpers.Helper;
 import com.simarjot.bookwala.model.Book;
 import com.simarjot.bookwala.model.UserRecieved;
+import com.simarjot.bookwala.ui.AllChatsFragment;
 import com.simarjot.bookwala.ui.ImageSliderAdapter;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
-public class SeeDetailsActivity extends AppCompatActivity {
+public class SeeDetailsFragment extends Fragment {
     public static final String BOOK_EXTRA = "book_extra";
     private Book book;
     private int currentImageIndex = 0;
@@ -48,40 +42,53 @@ public class SeeDetailsActivity extends AppCompatActivity {
     //widgets
     private MapView mapView;
     private ViewPager mViewPager;
-    private TextView mAuthorTV;
-    private TextView mSubjectTV;
-    private TextView mDescTV;
-    private TextView mTitleTV;
-    private TextView mPriceTV;
-    private Button mNextBtn;
-    private Button mPrevBtn;
+    private TextView mAuthorTV, mSubjectTV, mDescTV, mTitleTV, mPriceTV, mSellerNameTV;
+    private Button mNextBtn, mPrevBtn, mChatBtn;
     private ImageButton mBackBtn;
     private ImageView mSellerPhotoIV;
-    private TextView mSellerNameTV;
+    private View mRootView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_see_details);
+        mRootView = inflater.inflate(R.layout.activity_see_details, container, false);
         initViews();
-
-        String json = getIntent().getStringExtra(BOOK_EXTRA);
-        book = Book.parse(json);
-        setValues();
-
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
-                    if (book.getPostedIn() != null) {
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(book.getPostedIn().getLatitude(), book.getPostedIn().getLongitude())));
-                        googleMap.setMinZoomPreference(15);
-                    }
-                }
-        );
+            if (book.getPostedIn() != null) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(book.getPostedIn().getLatitude(), book.getPostedIn().getLongitude())));
+                googleMap.setMinZoomPreference(10);
+            }
+        });
+        String json = getArguments().getString(BOOK_EXTRA);
+        book = Book.parse(json);
 
-        mViewPager = findViewById(R.id.image_slider);
+        getSellerInfo();
+        setValues();
+        configureViewPager();
+
+        mBackBtn.setOnClickListener(v -> {
+        });
+
+        mChatBtn.setOnClickListener(v -> {
+            Fragment chatFragment = new AllChatsFragment();
+            Bundle args = new Bundle();
+            args.putString(MessagingActivity.OTHER_USER_UID, book.getUserUUID());
+            Log.d("user uid", book.getUserUUID());
+            chatFragment.setArguments(args);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.fragment_container, chatFragment)
+                    .commit();
+        });
+        return mRootView;
+    }
+
+    private void configureViewPager() {
         allImageUris = book.getImageDownloadUris();
         allImageUris.add(0, book.getCoverDownloadUri());
-        mViewPager.setAdapter(new ImageSliderAdapter(this, allImageUris));
+        mViewPager.setAdapter(new ImageSliderAdapter(getActivity(), allImageUris));
 
         if(allImageUris.size()==1){
             mPrevBtn.setVisibility(View.INVISIBLE);
@@ -99,14 +106,27 @@ public class SeeDetailsActivity extends AppCompatActivity {
             mViewPager.setCurrentItem(currentImageIndex);
             //updateButtonVisibility();
         });
+    }
 
-        mBackBtn.setOnClickListener(v -> finish());
-        getSellerInfo();
+    private void updateButtonVisibility() {
+        //checking if currentImageIndex represents the last item
+        if (currentImageIndex == allImageUris.size() - 1) {
+            mNextBtn.setVisibility(View.INVISIBLE);
+        } else {
+            mNextBtn.setVisibility(View.VISIBLE);
+        }
+
+        //if currentImageIndex represents the first image
+        if (currentImageIndex == 0) {
+            mPrevBtn.setVisibility(View.INVISIBLE);
+        } else {
+            mPrevBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getSellerInfo() {
         Log.d(Helper.TAG, "called get seller info");
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
         Uri uri = Uri.parse("https://us-central1-bookwala-86dc9.cloudfunctions.net");
         String uriString = uri.buildUpon()
                 .appendPath("user")
@@ -124,43 +144,31 @@ public class SeeDetailsActivity extends AppCompatActivity {
         Log.d(Helper.TAG, uriString);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uriString,
                 response -> {
+
                     Gson gson = new Gson();
                     UserRecieved seller = gson.fromJson(response, UserRecieved.class);
                     Glide.with(this).load(seller.getPhotoUrl()).into(mSellerPhotoIV);
                         mSellerNameTV.setText(seller.getDisplayName());
+
                 },
                 error -> Log.d(Helper.TAG, error.getMessage(), error));
         queue.add(stringRequest);
     }
 
-    private void updateButtonVisibility(){
-        //checking if currentImageIndex represents the last item
-        if(currentImageIndex == allImageUris.size()-1){
-            mNextBtn.setVisibility(View.INVISIBLE);
-        }else{
-            mNextBtn.setVisibility(View.VISIBLE);
-        }
-
-        //if currentImageIndex represents the first image
-        if(currentImageIndex == 0){
-            mPrevBtn.setVisibility(View.INVISIBLE);
-        }else{
-            mPrevBtn.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void initViews() {
-        mapView = findViewById(R.id.mapView);
-        mDescTV = findViewById(R.id.desc_tv);
-        mAuthorTV = findViewById(R.id.author_tv);
-        mPriceTV = findViewById(R.id.price_tv);
-        mSubjectTV = findViewById(R.id.subject_tv);
-        mTitleTV = findViewById(R.id.title_tv);
-        mPrevBtn = findViewById(R.id.prev_btn);
-        mNextBtn = findViewById(R.id.next_btn);
-        mBackBtn = findViewById(R.id.back_button);
-        mSellerNameTV = findViewById(R.id.seller_name_tv);
-        mSellerPhotoIV = findViewById(R.id.seller_image_view);
+        mapView = mRootView.findViewById(R.id.mapView);
+        mDescTV = mRootView.findViewById(R.id.desc_tv);
+        mAuthorTV = mRootView.findViewById(R.id.author_tv);
+        mPriceTV = mRootView.findViewById(R.id.price_tv);
+        mSubjectTV = mRootView.findViewById(R.id.subject_tv);
+        mTitleTV = mRootView.findViewById(R.id.title_tv);
+        mPrevBtn = mRootView.findViewById(R.id.prev_btn);
+        mNextBtn = mRootView.findViewById(R.id.next_btn);
+        mBackBtn = mRootView.findViewById(R.id.back_button);
+        mViewPager = mRootView.findViewById(R.id.image_slider);
+        mSellerNameTV = mRootView.findViewById(R.id.seller_name_tv);
+        mSellerPhotoIV = mRootView.findViewById(R.id.seller_image_view);
+        mChatBtn = mRootView.findViewById(R.id.chat_btn);
     }
 
     private void setValues() {
