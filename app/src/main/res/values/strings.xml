@@ -49,4 +49,7 @@
         <item>11th</item>
         <item>12th</item>
     </array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_message">Enter Message</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.MessagingActivity;
@@ -29,15 +30,22 @@ public class AllChatsAdapter extends FirestoreRecyclerAdapter<Chat, AllChatsAdap
 
     @Override
     protected void onBindViewHolder(@NonNull ChatHolder holder, int position, @NonNull Chat model) {
-        String otherPerson = model.getParticipants().get(1);
-        Log.d(Helper.TAG, model.getParticipants().toString());
+        String otherPerson;
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(model.getParticipants().get(0).equals(currentUser)){
+            otherPerson = model.getParticipants().get(1);
+        }else{
+            otherPerson = model.getParticipants().get(0);
+        }
+        Log.d(Helper.TAG, "current user: " + currentUser + ", other user: " + otherPerson);
+
         holder.participantName.setText(otherPerson);
+
         holder.itemView.setOnClickListener(v -> {
             Intent messagingIntent = new Intent(mContext, MessagingActivity.class);
             messagingIntent.putExtra(MessagingActivity.OTHER_USER_UID, otherPerson);
             mContext.startActivity(messagingIntent);
         });
-        Log.d(Helper.TAG, "AllChats: " + model.getParticipants().get(1));
     }
 
     @NonNull

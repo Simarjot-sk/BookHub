@@ -44,13 +44,6 @@ public class Chat {
         });
     }
 
-    public Query query() {
-        return FirebaseFirestore.getInstance()
-                .collection("chats")
-                .document(mChatId)
-                .collection("messages").orderBy("createdAt", Query.Direction.ASCENDING);
-    }
-
     public void sendMessage(Message message, OnSuccessListener<DocumentReference> listener) {
         Log.d(Helper.TAG, mCurrentChatRef.toString());
         mCurrentChatRef.collection("messages").add(message)
@@ -72,4 +65,5 @@ public class Chat {
             mOtherUser = participants.get(0);
         }
     }
+
 }

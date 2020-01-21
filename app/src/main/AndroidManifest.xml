@@ -27,12 +27,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".helpers.GetPictureActivity"/>
-        <activity android:name=".MessagingActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCA91O3STPVkn_x08v6Wb1ef7Vr-VdJt1c" />
-        <activity android:name=".AddDetailsActivity_2" />
+        <activity
+            android:name=".helpers.GetPictureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MessagingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".AddDetailsActivity_2"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CategorySelectorActivity"
             android:screenOrientation="portrait" />
