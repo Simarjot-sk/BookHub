@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -18,6 +19,7 @@ import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.simarjot.bookwala.R;
 import com.simarjot.bookwala.SeeDetailsFragment;
+import com.simarjot.bookwala.SeeDetailsFragmentDirections;
 import com.simarjot.bookwala.model.Book;
 
 public class BookRecyclerAdapter extends FirestorePagingAdapter<Book, BookRecyclerAdapter.BookHolder> {
@@ -35,15 +37,9 @@ public class BookRecyclerAdapter extends FirestorePagingAdapter<Book, BookRecycl
         holder.subjectTV.setText(book.getSubject());
         holder.priceTV.setText(book.priceWithCurrency());
         holder.itemView.setOnClickListener(v -> {
-            Fragment detailsFrag = new SeeDetailsFragment();
-            Bundle args = new Bundle();
-            args.putString(SeeDetailsFragment.BOOK_EXTRA, book.toJsonString());
-            detailsFrag.setArguments(args);
-            mActivity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fragment_container, detailsFrag)
-                    .commit();
+            SeeDetailsFragmentDirections.ActionSeeDetailsFragmentToChatMenu action =
+                    SeeDetailsFragmentDirections.actionSeeDetailsFragmentToChatMenu(book.toJsonString());
+            Navigation.findNavController(v).navigate(action);
         });
 
         Glide.with(mContext).load(book.getCoverDownloadUri()).into(holder.coverIV);
@@ -71,5 +67,4 @@ public class BookRecyclerAdapter extends FirestorePagingAdapter<Book, BookRecycl
             coverIV = itemView.findViewById(R.id.cover_image);
         }
     }
-
 }

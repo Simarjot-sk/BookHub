@@ -2,6 +2,7 @@ package com.simarjot.bookwala.model.chat;
 
 import android.util.Log;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;

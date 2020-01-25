@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.Request;
@@ -71,16 +72,10 @@ public class SeeDetailsFragment extends Fragment {
         });
 
         mChatBtn.setOnClickListener(v -> {
-            Fragment chatFragment = new AllChatsFragment();
-            Bundle args = new Bundle();
-            args.putString(MessagingActivity.OTHER_USER_UID, book.getUserUUID());
+            SeeDetailsFragmentDirections.ActionSeeDetailsFragmentToChatMenu action =
+                    SeeDetailsFragmentDirections.actionSeeDetailsFragmentToChatMenu(book.getUserUUID());
+            Navigation.findNavController(v).navigate(action);
             Log.d("user uid", book.getUserUUID());
-            chatFragment.setArguments(args);
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fragment_container, chatFragment)
-                    .commit();
         });
         return mRootView;
     }

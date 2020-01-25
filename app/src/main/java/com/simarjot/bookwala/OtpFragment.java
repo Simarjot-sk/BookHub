@@ -1,44 +1,48 @@
 package com.simarjot.bookwala;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.simarjot.bookwala.databinding.FragmentOtpBinding;
 
 import java.util.concurrent.TimeUnit;
 
 import in.aabhasjindal.otptextview.OTPListener;
-import in.aabhasjindal.otptextview.OtpTextView;
 
-public class OtpActivity extends AppCompatActivity {
+public class OtpFragment extends Fragment {
     private static final int REGISTRATION_REQUEST_CODE=123;
     private String mobileNo;
+    private String formattedMobileNo;
     private FirebaseAuth mAuth;
     private String verificationCode;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    private OtpTextView otpTextView;
-    private TextView tvMobileNo;
     private String otp;
+    private FragmentOtpBinding binding;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_otp);
-        ImageButton btnSignIn = findViewById(R.id.submit_btn);
-        otpTextView = findViewById(R.id.otp_view);
-        tvMobileNo = findViewById(R.id.mobile_tv);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_otp, container, false);
 
-        otpTextView.setOtpListener(new OTPListener() {
+        OtpFragmentArgs args = OtpFragmentArgs.fromBundle(getArguments());
+        mobileNo = args.getMobileNo();
+        formattedMobileNo = args.getMobileNoFormatted();
+
+        binding.otpView.setOtpListener(new OTPListener() {
             @Override
             public void onInteractionListener() {
                 // fired when user types something in the Otpbox
@@ -46,11 +50,10 @@ public class OtpActivity extends AppCompatActivity {
 
             @Override
             public void onOTPComplete(String otp) {
-                OtpActivity.this.otp = otp;
+                OtpFragment.this.otp = otp;
             }
         });
 
-        mobileNo = getIntent().getStringExtra(EnterPhoneNumberActivity.MOBILE_EXTRA);
 
         startFirebaseLogin();
 
@@ -58,19 +61,21 @@ public class OtpActivity extends AppCompatActivity {
                 mobileNo,           // Phone number to verify
                 60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
-                this,               // Activity (for callback binding)
+                getActivity(),               // Activity (for callback binding)
                 mCallbacks);        // OnVerificationStateChangedCallbacks
 
 
-        btnSignIn.setOnClickListener(v -> {
+        binding.submitBtn.setOnClickListener(v -> {
             if (otp == null || otp.length() < 6) {
-                Toast.makeText(OtpActivity.this, "please enter the OTP", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "please enter the OTP", Toast.LENGTH_SHORT).show();
             } else {
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, otp);
                 Log.d("nerd", credential.getSmsCode());
                 signInWithPhone(credential);
             }
         });
+
+        return binding.getRoot();
     }
 
 
@@ -86,17 +91,17 @@ public class OtpActivity extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Toast.makeText(OtpActivity.this, "verification failed", Toast.LENGTH_SHORT).show();
-                Log.d(EnterPhoneNumberActivity.TAG, "verification failed", e);
+                Toast.makeText(getContext(), "verification failed", Toast.LENGTH_SHORT).show();
+                Log.d(PhoneFragment.TAG, "verification failed", e);
             }
 
             @Override
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 verificationCode = s;
-                tvMobileNo.setText("OTP has been sent to you on " + getIntent().getStringExtra(EnterPhoneNumberActivity.MOBILE_EXTRA_FORMATTED));
-                Toast.makeText(OtpActivity.this, "Code sent", Toast.LENGTH_SHORT).show();
-                Log.d(EnterPhoneNumberActivity.TAG, verificationCode);
+                binding.mobileTv.setText("OTP has been sent to you on " + formattedMobileNo);
+                Toast.makeText(getContext(), "Code sent", Toast.LENGTH_SHORT).show();
+                Log.d(PhoneFragment.TAG, verificationCode);
             }
         };
     }
@@ -105,32 +110,19 @@ public class OtpActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(OtpActivity.this, "otp is correct", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "otp is correct", Toast.LENGTH_SHORT).show();
                         boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
                         if (isNewUser) {
-                            Intent registrationIntent = new Intent(OtpActivity.this, RegistrationActivity.class);
-                            registrationIntent.putExtra(EnterPhoneNumberActivity.MOBILE_EXTRA, mobileNo);
-                            startActivityForResult(registrationIntent, REGISTRATION_REQUEST_CODE);
-                        } else {
-                            Toast.makeText(this, "not a new user", Toast.LENGTH_SHORT).show();
-                            setResult(RESULT_OK);
-                            finish();
+                            Navigation.findNavController(getActivity(), R.id.nav_fragment_login).navigate(OtpFragmentDirections.actionOtpFragmentToRegistrationFragment());
+                        }else{
+                            getActivity().finish();
                         }
                     } else {
-                        Toast.makeText(this, "Incorrect OTP" +
+                        Toast.makeText(getContext(), "Incorrect OTP" +
                                 "", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(e -> {
-            Log.d(EnterPhoneNumberActivity.TAG, "verification failed", e);
+            Log.d(PhoneFragment.TAG, "verification failed", e);
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REGISTRATION_REQUEST_CODE && resultCode == RESULT_OK){
-            setResult(RESULT_OK);
-            finish();
-        }
     }
 }
