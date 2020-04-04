@@ -10,8 +10,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,9 +23,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.GeoPoint;
+import com.simarjot.bookwala.databinding.FragmentDetails2Binding;
 import com.simarjot.bookwala.helpers.Helper;
 import com.simarjot.bookwala.model.Book;
 import com.simarjot.bookwala.model.BookSharedPrefs;
@@ -31,48 +38,39 @@ import com.simarjot.bookwala.model.Server;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddDetailsActivity_2 extends AppCompatActivity {
+public class FragmentDetails2 extends Fragment {
     private static final int LOCATION_REQUEST = 114;
-    private static final int REQUEST_PLACE_PICKER = 11;
+    private FragmentDetails2Binding mBinding;
     private Context mContext;
-    //widgets
-    private Spinner mCurrencySpinner;
-    private EditText mDescET;
-    private EditText mPriceET;
-    private Button mDoneBTN;
-    private ProgressBar mProgressBar;
+
     private Location currentLocation;
     /////////////
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_details_2);
-        mContext = AddDetailsActivity_2.this;
-        mProgressBar = findViewById(R.id.progress_bar);
-        mCurrencySpinner = findViewById(R.id.currency_selector_spinner);
-        mDescET = findViewById(R.id.description_et);
-        mPriceET = findViewById(R.id.price_et);
-        mDoneBTN = findViewById(R.id.done_btn);
 
-        mProgressBar.setVisibility(View.GONE);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_details2, container, false);
+        mContext = getActivity();
+
+        mBinding.progressBar.setVisibility(View.GONE);
 
         List<String> currencySymbols = Arrays.asList("\u20B9", "US$", "PKR", "AU$", "CA$", "BDT", "NPR");
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, currencySymbols);
-        mCurrencySpinner.setAdapter(spinnerAdapter);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, currencySymbols);
+        mBinding.currencySelectorSpinner.setAdapter(spinnerAdapter);
 
-        mDoneBTN.setOnClickListener(v -> {
-            mDoneBTN.setClickable(false);
+        mBinding.doneBtn.setOnClickListener(v -> {
+            mBinding.doneBtn.setClickable(false);
             Log.d(Helper.TAG, "done button clicked");
-            String desc = mDescET.getText().toString();
-            String price = mPriceET.getText().toString();
-            String currency = (String) mCurrencySpinner.getSelectedItem();
+            String desc = mBinding.descriptionEt.getText().toString();
+            String price = mBinding.priceEt.getText().toString();
+            String currency = (String) mBinding.currencySelectorSpinner.getSelectedItem();
 
             getCurrentLocation();
 
             if(!desc.isEmpty() && !price.isEmpty() && currency!=null ){
-                SharedPreferences.Editor editor= getSharedPreferences(BookSharedPrefs.SHARED_PREFS, MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor= mContext.getSharedPreferences(BookSharedPrefs.SHARED_PREFS, Context.MODE_PRIVATE).edit();
                 editor.putString(BookSharedPrefs.DESCRIPTION, desc);
                 editor.putString(BookSharedPrefs.PRICE, price);
                 editor.putString(BookSharedPrefs.CURRENCY, currency);
@@ -81,36 +79,36 @@ public class AddDetailsActivity_2 extends AppCompatActivity {
                 Book book = BookSharedPrefs.getBook(mContext);
                 book.setPostedIn(new GeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()));
                 Server server = new Server(book);
-                mProgressBar.setVisibility(View.VISIBLE);
+                mBinding.progressBar.setVisibility(View.VISIBLE);
 
                 server.uploadBookWithImages(BookSharedPrefs.getImageUris(mContext),
-                        BookSharedPrefs.getCoverImageUri(mContext), 
+                        BookSharedPrefs.getCoverImageUri(mContext),
                         book.getBookUUID())
                         .setUploadFinishedListener(new Server.OnUploadFinishedListener() {
                             @Override
                             public void onUploadFinish() {
-                                mProgressBar.setVisibility(View.GONE);
-                                mDoneBTN.setClickable(true);
-                                Intent intent = new Intent(AddDetailsActivity_2.this, HomeActivity.class);
+                                mBinding.progressBar.setVisibility(View.GONE);
+                                mBinding.doneBtn.setClickable(true);
+                                Intent intent = new Intent(getActivity(), HomeActivity.class);
                                 startActivity(intent);
-                                finish();
                             }
 
                             @Override
                             public void onUploadFailed() {
-                                mProgressBar.setVisibility(View.GONE);
-                                mDoneBTN.setClickable(true);
+                                mBinding.progressBar.setVisibility(View.GONE);
+                                mBinding.doneBtn.setClickable(true);
                             }
                         });
             }else{
-                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             }
         });
+        return mBinding.getRoot();
     }
 
     private void getCurrentLocation(){
         if(getLocationPermission()){
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
             String bestProvider = locationManager.getBestProvider(criteria, false);
             currentLocation = locationManager.getLastKnownLocation(bestProvider);
@@ -119,7 +117,7 @@ public class AddDetailsActivity_2 extends AppCompatActivity {
 
     private boolean getLocationPermission(){
         if(Build.VERSION.SDK_INT>=23){
-            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
+            if(mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED){
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
                 return false;
             }else{

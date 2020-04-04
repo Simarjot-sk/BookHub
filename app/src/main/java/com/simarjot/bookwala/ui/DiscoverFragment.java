@@ -1,5 +1,6 @@
 package com.simarjot.bookwala.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,29 +9,38 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.simarjot.bookwala.R;
+import com.simarjot.bookwala.databinding.FragmentDiscoverBinding;
 import com.simarjot.bookwala.model.Book;
 
 public class DiscoverFragment extends Fragment {
-    FirebaseFirestore db;
-    BookRecyclerAdapter adapter;
-    private RecyclerView mBookRecyclerView;
+    private BookRecyclerAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_discover, null);
-        mBookRecyclerView = rootView.findViewById(R.id.book_recycler_view);
-        db = FirebaseFirestore.getInstance();
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-        mBookRecyclerView.setLayoutManager(layoutManager);
+        FragmentDiscoverBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_discover, container, false);
+        if(!isLoggedIn()){
+            Activity homeActivity = getActivity();
+            assert homeActivity != null;
+            NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host);
+            controller.navigate(DiscoverFragmentDirections.actionDiscoverMenuToEnterPhoneNumberFragment());
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        binding.bookRecyclerView.setLayoutManager(gridLayoutManager);
 
         Query query = db.collection("books");
         PagedList.Config config = new PagedList.Config.Builder()
@@ -45,8 +55,8 @@ public class DiscoverFragment extends Fragment {
                 .build();
 
         adapter = new BookRecyclerAdapter(options, (AppCompatActivity) getActivity());
-        mBookRecyclerView.setAdapter(adapter);
-        return rootView;
+        binding.bookRecyclerView.setAdapter(adapter);
+        return binding.getRoot();
     }
 
     @Override
@@ -59,5 +69,9 @@ public class DiscoverFragment extends Fragment {
     public void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    private boolean isLoggedIn(){
+        return FirebaseAuth.getInstance().getCurrentUser()!=null;
     }
 }

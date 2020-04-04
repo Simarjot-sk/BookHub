@@ -37,8 +37,8 @@ public class BookRecyclerAdapter extends FirestorePagingAdapter<Book, BookRecycl
         holder.subjectTV.setText(book.getSubject());
         holder.priceTV.setText(book.priceWithCurrency());
         holder.itemView.setOnClickListener(v -> {
-            SeeDetailsFragmentDirections.ActionSeeDetailsFragmentToChatMenu action =
-                    SeeDetailsFragmentDirections.actionSeeDetailsFragmentToChatMenu(book.toJsonString());
+            DiscoverFragmentDirections.ActionDiscoverMenuToSeeDetailsFragment action =
+                    DiscoverFragmentDirections.actionDiscoverMenuToSeeDetailsFragment(book.toJsonString());
             Navigation.findNavController(v).navigate(action);
         });
 

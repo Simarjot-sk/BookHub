@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class SeeDetailsFragment extends Fragment {
-    public static final String BOOK_EXTRA = "book_extra";
     private Book book;
     private int currentImageIndex = 0;
     private List<String> allImageUris;
@@ -61,21 +60,18 @@ public class SeeDetailsFragment extends Fragment {
                 googleMap.setMinZoomPreference(10);
             }
         });
-        String json = getArguments().getString(BOOK_EXTRA);
+        SeeDetailsFragmentArgs args = SeeDetailsFragmentArgs.fromBundle(Objects.requireNonNull(getArguments()));
+        String json = args.getBookJson();
         book = Book.parse(json);
 
         getSellerInfo();
         setValues();
         configureViewPager();
 
-        mBackBtn.setOnClickListener(v -> {
-        });
-
         mChatBtn.setOnClickListener(v -> {
-            SeeDetailsFragmentDirections.ActionSeeDetailsFragmentToChatMenu action =
-                    SeeDetailsFragmentDirections.actionSeeDetailsFragmentToChatMenu(book.getUserUUID());
+            SeeDetailsFragmentDirections.ActionSeeDetailsFragmentToMessagingActivity action =
+                    SeeDetailsFragmentDirections.actionSeeDetailsFragmentToMessagingActivity(book.getUserUUID());
             Navigation.findNavController(v).navigate(action);
-            Log.d("user uid", book.getUserUUID());
         });
         return mRootView;
     }

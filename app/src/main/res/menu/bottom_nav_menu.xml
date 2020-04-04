@@ -17,11 +17,6 @@
         android:title="@string/sell" />
 
     <item
-        android:id="@+id/search_menu"
-        android:icon="@drawable/search"
-        android:title="@string/search" />
-
-    <item
         android:id="@+id/settings_menu"
         android:icon="@drawable/setting"
         android:title="@string/settings" />

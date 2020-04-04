@@ -2,6 +2,7 @@ package com.simarjot.bookwala.model.chat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.sip.SipSession;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +12,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.MessagingActivity;
 import com.simarjot.bookwala.R;
 import com.simarjot.bookwala.helpers.Helper;
+import com.simarjot.bookwala.model.UserRecieved;
 
 public class AllChatsAdapter extends FirestoreRecyclerAdapter<Chat, AllChatsAdapter.ChatHolder> {
     private Context mContext;
@@ -31,15 +40,21 @@ public class AllChatsAdapter extends FirestoreRecyclerAdapter<Chat, AllChatsAdap
     @Override
     protected void onBindViewHolder(@NonNull ChatHolder holder, int position, @NonNull Chat model) {
         String otherPerson;
+        //finding which person from the two participants is the currently logged in user
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if(model.getParticipants().get(0).equals(currentUser)){
+        if (model.getParticipants().get(0).equals(currentUser)) {
             otherPerson = model.getParticipants().get(1);
-        }else{
+        } else {
             otherPerson = model.getParticipants().get(0);
         }
         Log.d(Helper.TAG, "current user: " + currentUser + ", other user: " + otherPerson);
 
-        holder.participantName.setText(otherPerson);
+        Helper.getUserFromUid(mContext, otherPerson, response -> {
+            Gson gson = new Gson();
+            UserRecieved user = gson.fromJson(response, UserRecieved.class);
+            holder.participantName.setText(user.getDisplayName());
+            Glide.with(mContext).load(user.getPhotoUrl()).into(holder.participantImage);
+        });
 
         holder.itemView.setOnClickListener(v -> {
             Intent messagingIntent = new Intent(mContext, MessagingActivity.class);

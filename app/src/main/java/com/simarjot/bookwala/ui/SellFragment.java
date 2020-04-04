@@ -16,8 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import com.simarjot.bookwala.CategorySelectorActivity;
+import com.simarjot.bookwala.CategoriesFragment;
 import com.simarjot.bookwala.R;
 import com.simarjot.bookwala.helpers.GetPictureActivity;
 import com.simarjot.bookwala.helpers.ImageAdderUtility;
@@ -53,8 +54,8 @@ public class SellFragment extends Fragment {
             editor.putStringSet(BookSharedPrefs.IMAGE_URIS, new HashSet<>(imageUris));
             editor.putString(BookSharedPrefs.COVER_IMAGE_URI, imageUris.get(coverImageIndex));
             editor.apply();
-            Intent intent = new Intent(getContext(), CategorySelectorActivity.class);
-            getActivity().startActivity(intent);
+
+            Navigation.findNavController(v).navigate(SellFragmentDirections.actionSellMenuToCategoriesFragment());
         });
 
         addBtn.setOnClickListener(v -> {
@@ -68,6 +69,7 @@ public class SellFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == 22) {
+            assert data.getData() != null;
             imageUtil.addImage(data.getData());
         } else {
             Log.d("nerd", "result code not ok");

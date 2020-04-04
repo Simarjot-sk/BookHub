@@ -7,22 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.simarjot.bookwala.databinding.FragmentRegistrationBinding;
 import com.simarjot.bookwala.helpers.GetPictureActivity;
 import com.simarjot.bookwala.helpers.Helper;
@@ -31,11 +28,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class RegistrationFragment extends Fragment {
     private static final int GET_PICTURE_CODE = 123;
-    private static final String TAG = "nerd";
     private Uri mImageUri;
-
-    //widgets
-
     private FragmentRegistrationBinding binding;
 
     @Nullable
@@ -52,7 +45,6 @@ public class RegistrationFragment extends Fragment {
 
         });
         binding.submitBtn.setOnClickListener(v -> updateUserDetails());
-
         return binding.getRoot();
     }
 
@@ -69,7 +61,7 @@ public class RegistrationFragment extends Fragment {
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.submitBtn.setClickable(false);
         userProfileRef.putFile(mImageUri).addOnFailureListener(e -> Log.d(Helper.TAG, "failed to upload file to server", e))
-                .addOnCompleteListener(task -> userProfileRef.getDownloadUrl().addOnSuccessListener(uri -> updateUser(uri)));
+                .addOnCompleteListener(task -> userProfileRef.getDownloadUrl().addOnSuccessListener(this::updateUser));
     }
 
     private void updateUser(Uri downloadUri) {
@@ -84,7 +76,7 @@ public class RegistrationFragment extends Fragment {
                     Toast.makeText(getContext(), "profile updated successfully", Toast.LENGTH_SHORT).show();
                     binding.progressBar.setVisibility(View.GONE);
                     binding.submitBtn.setClickable(true);
-                    getActivity().finish();
+                    Navigation.findNavController(getActivity(), R.id.nav_host).navigate(RegistrationFragmentDirections.actionRegistrationFragmentToDiscoverMenu());
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "failed to update profile", Toast.LENGTH_SHORT).show());
     }

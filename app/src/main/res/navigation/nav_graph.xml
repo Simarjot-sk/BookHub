@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/discover_menu">
+
+    <fragment
+        android:id="@+id/enterPhoneNumberFragment"
+        android:name="com.simarjot.bookwala.PhoneFragment"
+        android:label="Enter Phone Number"
+        tools:layout="@layout/fragment_enter_phone_number">
+        <action
+            android:id="@+id/action_enterPhoneNumberFragment_to_otpFragment"
+            app:destination="@id/otpFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.simarjot.bookwala.OtpFragment"
+        android:label="Enter OTP"
+        tools:layout="@layout/fragment_otp">
+        <action
+            android:id="@+id/action_otpFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="mobile_no"
+            app:argType="string" />
+        <argument
+            android:name="mobile_no_formatted"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_otpFragment_to_discover_menu"
+            app:destination="@id/discover_menu"
+            app:popUpTo="@id/enterPhoneNumberFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.simarjot.bookwala.RegistrationFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_registration">
+        <action
+            android:id="@+id/action_registrationFragment_to_discover_menu"
+            app:destination="@id/discover_menu" />
+    </fragment>
+
+
+    <fragment
+        android:id="@id/chat_menu"
+        android:name="com.simarjot.bookwala.ui.AllChatsFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat">
+        <action
+            android:id="@+id/action_chat_menu_to_messagingActivity"
+            app:destination="@id/messagingActivity" />
+    </fragment>
+    <fragment
+        android:id="@id/sell_menu"
+        android:name="com.simarjot.bookwala.ui.SellFragment"
+        android:label="fragment_sell_new"
+        tools:layout="@layout/fragment_sell_new">
+        <action
+            android:id="@+id/action_sell_menu_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
+    </fragment>
+    <fragment
+        android:id="@id/discover_menu"
+        android:name="com.simarjot.bookwala.ui.DiscoverFragment"
+        android:label="fragment_discover"
+        tools:layout="@layout/fragment_discover">
+        <action
+            android:id="@+id/action_discover_menu_to_seeDetailsFragment"
+            app:destination="@id/seeDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_discover_menu_to_enterPhoneNumberFragment"
+            app:destination="@id/enterPhoneNumberFragment"
+            app:popUpTo="@id/discover_menu"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@id/settings_menu"
+        android:name="com.simarjot.bookwala.ui.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settings_menu_to_enterPhoneNumberFragment"
+            app:destination="@id/enterPhoneNumberFragment"
+            app:popUpTo="@id/discover_menu"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/seeDetailsFragment"
+        android:name="com.simarjot.bookwala.SeeDetailsFragment"
+        android:label="activity_see_details"
+        tools:layout="@layout/activity_see_details">
+        <argument
+            android:name="book_json"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_seeDetailsFragment_to_messagingActivity"
+            app:destination="@id/messagingActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/messagingActivity"
+        android:name="com.simarjot.bookwala.MessagingActivity"
+        android:label="activity_messaging"
+        tools:layout="@layout/activity_messaging">
+        <argument
+            android:name="other_user_id"
+            app:argType="string" />
+    </activity>
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.simarjot.bookwala.CategoriesFragment"
+        android:label="fragment_categories"
+        tools:layout="@layout/fragment_categories">
+        <action
+            android:id="@+id/action_categoriesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.simarjot.bookwala.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details">
+        <action
+            android:id="@+id/action_detailsFragment_to_fragmentDetails2"
+            app:destination="@id/fragmentDetails2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentDetails2"
+        android:name="com.simarjot.bookwala.FragmentDetails2"
+        android:label="fragment_details2"
+        tools:layout="@layout/fragment_details2">
+        <action
+            android:id="@+id/action_fragmentDetails2_to_discover_menu"
+            app:destination="@id/discover_menu" />
+    </fragment>
+</navigation>

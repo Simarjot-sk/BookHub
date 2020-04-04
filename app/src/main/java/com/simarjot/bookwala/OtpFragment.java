@@ -1,5 +1,6 @@
 package com.simarjot.bookwala;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.FirebaseException;
@@ -18,13 +20,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.simarjot.bookwala.databinding.FragmentOtpBinding;
+import com.simarjot.bookwala.helpers.Helper;
 
 import java.util.concurrent.TimeUnit;
 
 import in.aabhasjindal.otptextview.OTPListener;
 
 public class OtpFragment extends Fragment {
-    private static final int REGISTRATION_REQUEST_CODE=123;
     private String mobileNo;
     private String formattedMobileNo;
     private FirebaseAuth mAuth;
@@ -61,7 +63,7 @@ public class OtpFragment extends Fragment {
                 mobileNo,           // Phone number to verify
                 60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
-                getActivity(),               // Activity (for callback binding)
+                getActivity(),               // Activity (for callback mBinding)
                 mCallbacks);        // OnVerificationStateChangedCallbacks
 
 
@@ -92,7 +94,7 @@ public class OtpFragment extends Fragment {
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 Toast.makeText(getContext(), "verification failed", Toast.LENGTH_SHORT).show();
-                Log.d(PhoneFragment.TAG, "verification failed", e);
+                Log.d(Helper.TAG, "verification failed", e);
             }
 
             @Override
@@ -101,7 +103,7 @@ public class OtpFragment extends Fragment {
                 verificationCode = s;
                 binding.mobileTv.setText("OTP has been sent to you on " + formattedMobileNo);
                 Toast.makeText(getContext(), "Code sent", Toast.LENGTH_SHORT).show();
-                Log.d(PhoneFragment.TAG, verificationCode);
+                Log.d(Helper.TAG, verificationCode);
             }
         };
     }
@@ -109,20 +111,21 @@ public class OtpFragment extends Fragment {
     private void signInWithPhone(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
+                    Activity homeActivity = getActivity();
+                    assert homeActivity != null;
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host);
+
                     if (task.isSuccessful()) {
                         Toast.makeText(getContext(), "otp is correct", Toast.LENGTH_SHORT).show();
                         boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
                         if (isNewUser) {
-                            Navigation.findNavController(getActivity(), R.id.nav_fragment_login).navigate(OtpFragmentDirections.actionOtpFragmentToRegistrationFragment());
+                            navController.navigate(OtpFragmentDirections.actionOtpFragmentToRegistrationFragment());
                         }else{
-                            getActivity().finish();
+                            navController.navigate(OtpFragmentDirections.actionOtpFragmentToDiscoverMenu());
                         }
                     } else {
-                        Toast.makeText(getContext(), "Incorrect OTP" +
-                                "", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Incorrect OTP", Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(e -> {
-            Log.d(PhoneFragment.TAG, "verification failed", e);
-        });
+                }).addOnFailureListener(e -> Log.d(Helper.TAG, "verification failed", e));
     }
 }

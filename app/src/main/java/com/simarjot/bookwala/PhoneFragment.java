@@ -1,32 +1,25 @@
 package com.simarjot.bookwala;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
-import com.hbb20.CountryCodePicker;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.simarjot.bookwala.databinding.FragmentEnterPhoneNumberBinding;
 
 public class PhoneFragment extends Fragment {
-    public static final int OTP_ACTIVITY = 451;
-    public static String MOBILE_EXTRA = "mobile_extra";
-    public static String MOBILE_EXTRA_FORMATTED = "mobile_formatted";
-    public static String TAG = "nerd";
     FragmentEnterPhoneNumberBinding binding;
     private boolean isValid = false;
-
 
     @Nullable
     @Override
@@ -44,7 +37,7 @@ public class PhoneFragment extends Fragment {
             }
         });
 
-        binding.submitBtn.setOnClickListener(v -> {
+        binding.submitBtn.setOnClickListener( v -> {
             if (isValid) {
                 String mobileNo = binding.ccp.getFullNumberWithPlus().trim();
                 String formattedMobileNo = binding.ccp.getFormattedFullNumber().trim();
